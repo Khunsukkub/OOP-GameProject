@@ -1,5 +1,6 @@
 public class Player {
     private String name;
+    public boolean playerState; // เช็ค state ถ้า True แปลว่าถึงตาที่เล่นแล้ว & False คือไม่ถึง Turn
     public int team;
     private int coin;
     private int[][] ownHex;
@@ -7,6 +8,9 @@ public class Player {
 
     public Player(int coin) {
         this.coin = coin;
+        if ((team == 1)) {
+            playerState = true;
+        } else playerState = false;
     }
 
     public void setName(String name){
@@ -21,5 +25,9 @@ public class Player {
         }
     }
 
-    public void getMinion(){}
+    public void getMinion(){
+        if(playerState == true) {
+
+        }
+    }
 }

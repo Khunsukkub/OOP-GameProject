@@ -2,11 +2,13 @@ public class Hex {
     private int[][] Hex;
     private Player owner;
     private int cost;
+    public double interest;
     private String color;
 
     public Hex() {
         this.Hex = new int[8][8];
         this.cost = 1000;
+        this.interest = 50;
         this.color = "FFFFF";
     }
 

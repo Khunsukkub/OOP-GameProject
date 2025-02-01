@@ -1,25 +1,21 @@
 public class Player {
     private String name;
     public int team;
-    private int coin;
-    private int[][] ownHex;
-    private Minion ownMinion;
+    private Coin coin;
 
-    public Player(int coin) {
-        this.coin = coin;
+    public Player(int initialCoin) {
+        this.coin = new Coin(initialCoin);
     }
 
-    public void setName(String name){
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
-    public void setDefaultHex(){ //คอยให้ช่องเริ่มต้นของผู้เล่นทั้งสองฝั่ง
-        if(team == 1) {
-
-        } else {
-
-        }
+    public int getTeam() {
+        return team;
     }
 
-    public void getMinion(){}
+    public Coin getCoinObject() { //ใช้งาน Coin โดยตรง
+        return this.coin;
+    }
 }

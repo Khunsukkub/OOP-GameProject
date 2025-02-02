@@ -50,8 +50,7 @@ public class Minion {
     }
 
     public void moveTo(Hex hex) {
-        if (hex != null && hex.owner != null && hex.owner.name.equals(this.name) &&
-                getDistance(this.position, hex) <= moveRange) {
+        if (hex.owner.name.equals(this.name) && getDistance(this.position, hex) <= moveRange) {
             this.position = hex;
             System.out.println(name + " moved to a new position.");
         } else {

@@ -34,7 +34,7 @@ public class Main {
         Turn++;
     }
 
-    private void hexPhase() {
+    private void hexPhase() { // ช่วยแก้ตรงนี้หน่อย
         playerNow.phase = "BuyHex";
         if (hexToBuy != null) {
             playerNow.buyHex(hexToBuy);

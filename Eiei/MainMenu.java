@@ -1,3 +1,5 @@
+package Eiei;
+
 class MainMenu {
     public void playerVSPlayer(){
 

@@ -1,3 +1,5 @@
+package Eiei;
+
 public class Main {
     public static int turnInterest = 100;
     Player playerNow;

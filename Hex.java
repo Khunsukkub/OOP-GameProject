@@ -1,21 +1,24 @@
 public class Hex {
-    private int[][] Hex;
-    private Player owner;
-    private int cost;
+    public int x, y; // Coordinates for distance calculation
+    public Player owner;
+    public int cost;
     public double interest;
     private String color;
 
-    public Hex() {
-        this.Hex = new int[8][8];
+    public Hex(int x, int y, Player owner) {
+        this.x = x;
+        this.y = y;
+        this.owner = null;
         this.cost = 1000;
         this.interest = 50;
-        this.color = "FFFFF";
+        this.color = "#FFFFFF";
     }
 
-    public int encodePosition(int row, int col) { // เอาไว้เก็บใน array บอกตำแหน่ง
-        return row * 10 + col; // ตัวอย่างการเข้ารหัส เช่น row=1, col=2 จะเป็น 12
+    public void hexState() {
+        if (owner != null) {
+            System.out.println("Hex is owned by " + owner.name);
+        } else {
+            System.out.println("Hex is unowned.");
+        }
     }
-
-    public void hexState(){} //เอาไว้เช็คว่าช่องนี้เป็นของใคร และ คอยเปลี่ยนสี
-
 }

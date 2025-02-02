@@ -34,7 +34,10 @@ public class Main {
 
     private void hexPhase() {
         playerNow.phase = "BuyHex";
-        playerNow.buyHex();
+        Hex hexToBuy = getAvailableHex(); // Dummy method to get a Hex
+        if (hexToBuy != null) {
+            playerNow.buyHex(hexToBuy);
+        }
     }
 
     private void giveCoin(Player playerNow) {
@@ -47,5 +50,16 @@ public class Main {
 
     private int SpeedUP(){
         return turnInterest+(turnInterest/2);
+    }
+
+    private Hex getAvailableHex() {
+        for (int i = 0; i < 64; i++) {
+            for (int j = 0; j < hexGrid[i].length; j++) {
+                if (hexGrid[i][j].owner == null) {
+                    return hexGrid[i][j]; // คืนค่า Hex ที่ไม่มีเจ้าของ
+                }
+            }
+        }
+        return null; // ไม่มี Hex ว่างเหลือ
     }
 }

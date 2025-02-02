@@ -7,12 +7,12 @@ public class Minion {
     private int hp;
     private int mp;
     private int maxHp;
-    private int maxMp;
+    private int maxMp; //เอาไว้ปล่อยสกิล แต่ตอนนี้ยังบ่มี
     private int ATK;
     private int DEF;
-    private int moveRange;
-    private int atkRange;
-    private Hex position;
+    private int moveRange; //ระยะที่เดินได้
+    private int atkRange; //ระยะโจมตี
+    private Hex position; // ตำแหน่งที่ยืนอยู่
 
     public Minion(int level, int cost , int maxHp , int maxMp , int ATK , int DEF , int moveRange , int atkRange ) {
         this.level = level;
@@ -60,7 +60,7 @@ public class Minion {
         }
     }
 
-    private int getDistance(Hex a, Hex b) {
+    private int getDistance(Hex a, Hex b) { //เอาไว้ ดูว่า ระยะทางระหว่างเป้าหมาย ที่มี กับ ระยะโจมตี หรือ ระยะเดิน มันสมเหตุสมผลรึป่าว
         return Math.abs(a.x - b.x) + Math.abs(a.y - b.y); // Example distance calculation
     }
 

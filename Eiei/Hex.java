@@ -16,11 +16,11 @@ public class Hex {
         this.color = "#FFFFFF";
     }
 
-    public void hexState() {
+    public String hexState() { //เช็คเจ้าของที่
         if (owner != null) {
-            System.out.println("Eiei.Hex is owned by " + owner.name);
+            return "noOwner"
         } else {
-            System.out.println("Eiei.Hex is unowned.");
+            return "hasOwner"
         }
     }
 }

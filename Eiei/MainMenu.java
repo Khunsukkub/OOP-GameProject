@@ -1,6 +1,6 @@
 package Eiei;
 
-class MainMenu {
+class MainMenu { // หน้าหลักเอาไว้เลือก โหมดการเล่น
     public void playerVSPlayer(){
 
     }

@@ -7,24 +7,24 @@ public class Player {
     private int coin;
     public Hex[] ownHex;
     private Minion ownMinion;
-    public String phase;
+    public String phase; //เฟส ในแต่ละเทิร์น
 
     public Player(int team, int coin) {
         this.team = team;
         this.coin = coin;
-        this.ownHex = new Hex[0]; // Initialize empty array
+        this.ownHex = new Hex[0]; // array ไว้เก็บ hex ที่ครอบครอง
         this.playerState = (team == 1); // First player gets the turn
     }
 
-    public void setName(String name) {
+    public void setName(String name) { //ไว้ตั้งชื่อผู้เล่น
         this.name = name;
     }
 
-    public boolean isPlayerTurn() {
+    public boolean isPlayerTurn() { //เช็คว่าผู้เล่นคนนี้เป็นผู้เล่นในเทิร์นนี้รึป่าว
         return playerState;
     }
 
-    public void UpdatedStats() {
+    public void UpdatedStats() { // ทุกครั้งที่ใช้ จะเพิ่มเงิน กริ๊งๆ
         coin += hexInterest() + Main.turnInterest;
     }
 
@@ -32,7 +32,7 @@ public class Player {
         return (ownHex.length > 0) ? (int) (ownHex.length * ownHex[0].interest) : 0;
     }
 
-    public void setDefaultHex() {
+    public void setDefaultHex() { //เอาไว้ให้ Hex เริ่มต้นของตัวละคร
         System.out.println(name + " has been assigned starting hex.");
     }
 

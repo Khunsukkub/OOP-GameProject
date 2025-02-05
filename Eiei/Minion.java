@@ -3,16 +3,16 @@ package Eiei;
 public class Minion {
     public String name;
     private int level;
-    private int cost;
+    public int cost;
     private int hp;
     private int mp;
     private int maxHp;
     private int maxMp; //เอาไว้ปล่อยสกิล แต่ตอนนี้ยังบ่มี
     private int ATK;
     private int DEF;
-    private int moveRange; //ระยะที่เดินได้
-    private int atkRange; //ระยะโจมตี
-    private Hex position; // ตำแหน่งที่ยืนอยู่
+    public int moveRange; //ระยะที่เดินได้
+    public int atkRange; //ระยะโจมตี
+    public Hex position; // ตำแหน่งที่ยืนอยู่
 
     public Minion(int level, int cost , int maxHp , int maxMp , int ATK , int DEF , int moveRange , int atkRange ) {
         this.level = level;

@@ -4,14 +4,16 @@ public class Main {
     public static int turnInterest = 100;
     Player playerNow;
     public int Turn = 0;
+    public String[] Phase = ["BuyHex" , "BuyMinion" , "MoveMinion"]
+    public int phaseCount = 0;
 
     public void mainGame(Player player1, Player player2) {
         while(Turn != 50) { // เอาไว้ set turn ทั้งเกม
             checkPlayerTurn(player1 , player2);
             StartPhase();
-            hexPhase(); //50%
-            //buyMinionPhase(); // เอาไว้ซื้อ minion
-            //minionPhase(); // เอาไว้ ใช้ minion
+            hexPhase(); // เอาไว้ซื้อช่อง
+            buyMinionPhase(); // เอาไว้ซื้อ minion
+            minionPhase(); // เอาไว้ ใช้ minion
             EndTurn();
             playerToggle(player1,player2);
         }
@@ -33,14 +35,30 @@ public class Main {
     }
 
     private void EndTurn() {
+        phaseCount = 0;
+        playerNow.phase = "";
         Turn++;
     }
 
     private void hexPhase() { // ช่วยแก้ตรงนี้หน่อย
         playerNow.phase = "BuyHex";
-        if (hexToBuy != null) {
-            playerNow.buyHex(hexToBuy); // ไม่รู้ว่า จะจัดการยังไงให้ ซื้อ Hex ที่ต้องการได้ แต่เดี๋ยวจะตรวจตรงนี้ให้
+        while(playerNow.phase == "BuyHex") {
+            //Loop จนกว่าจะกด Player จะกด endPhase ใน UI
         }
+    }
+
+    private void buyMinionPhase() {
+        while(playerNow.phase == "BuyMinion") {
+            //Loop จนกว่า Player จะกด endPhase ใน UI
+        }
+    }
+
+    private void minionPhase() {
+
+    }
+
+    public void endPhase() {
+        playerNow.phase = Phase[phaseCount++];
     }
 
     private void giveCoin(Player playerNow) { //ให้เงินตัวละคร

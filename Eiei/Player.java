@@ -51,4 +51,8 @@ public class Player {
             System.out.println("Cannot buy this hex.");
         }
     }
+
+    public void buyMinion(Minnion) {
+
+    }
 }

@@ -1,0 +1,13 @@
+ทดสอบ WebSocket
+1. เริ่มเซิร์ฟเวอร์  mvn spring-boot:run
+2. ใช้ WebSocket Client (wscat) เพื่อรับข้อมูล
+-ติดตั้ง wscat :npm install -g wscat
+-เชื่อมต่อ WebSocket :wscat -c ws://localhost:8080/game-updates
+
+out put Connected (press CTRL+C to quit)
+3. เรียก /game/autoTurn เพื่อให้ AI ทำงาน
+curl -X GET "http://localhost:8080/game/autoTurn"
+ WebSocket ทำงาน
+ Minion Warrior took an action!
+ Minion Enemy took an action!
+ ✅ Auto Turn Completed!

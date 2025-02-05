@@ -1,0 +1,6 @@
+{
+  "startingHP": 100,
+  "startingBudget": 1000,
+  "interestRate": 5,
+  "maxRounds": 20
+}

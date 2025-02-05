@@ -1,0 +1,5 @@
+ เพิ่ม WebSocketConfig.java เปิดใช้งาน WebSocket
+✔ สร้าง GameWebSocketHandler.java ส่งข้อมูลไปยัง Clients
+✔ เชื่อม GameManager.java ให้ส่งข้อมูลอัปเดตผ่าน WebSocket
+✔ ทดสอบด้วย wscat และ curl → WebSocket ทำงานได้จริง
+

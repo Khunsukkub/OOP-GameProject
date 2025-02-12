@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minion Land - Start</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<div class="container">
+    <h1>MINION LAND</h1>
+    <button onclick="startGame()">Play 🎮</button>
+    <button onclick="exitGame()">Exit 🎮</button>
+</div>
+
+<script>
+    function startGame() {
+        window.location.href = 'model.html';  // เปลี่ยนจาก mode.html เป็น model.html ตามที่บอมตั้งชื่อไว้
+    }
+
+    function exitGame() {
+        window.close();  // ปิดหน้าเว็บ
+    }
+</script>
+</body>
+</html>

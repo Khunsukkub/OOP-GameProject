@@ -1,0 +1,175 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #1c1c1c;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 50px;
+}
+
+.container {
+    background: #333;
+    padding: 30px;
+    border-radius: 10px;
+    display: inline-block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+input {
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 300px;
+}
+
+.minion-list button {
+    margin: 10px;
+    padding: 15px;
+    font-size: 18px;
+    width: 200px;
+}
+
+#minionDetails {
+    margin-top: 20px;
+}
+
+textarea {
+    width: 80%;
+    height: 150px;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: monospace;
+}
+
+.hex-grid {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    margin:  auto;
+}
+
+.hex-row {
+    display: flex;
+    justify-content: center;
+    line-height: 0;  /* ทำให้แถวแนบสนิทกัน */
+}
+
+.hex {
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    border: 2px solid black;
+    position: absolute;  /* ใช้ absolute เพื่อวางตำแหน่งที่กำหนด */
+}
+
+/* สลับแถวคู่ให้ชิดกัน */
+.hex-row:nth-child(even) {
+    transform: translateX(28px);  /* เลื่อนแถวคู่ให้ชิดแถวคี่ */
+}
+
+/* สีสำหรับ Minion */
+.minion {
+    background-color: green;
+    clip-path: circle(40% at 50% 50%);
+    position: relative;
+}
+
+.minion::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 25px;
+    width: 8px;
+    height: 8px;
+    background-color: black;
+    border-radius: 50%;
+}
+
+.enemy-minion {
+    background-color: blue;
+    clip-path: circle(40% at 50% 50%);
+}
+
+.enemy-minion::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 25px;
+    width: 8px;
+    height: 8px;
+    background-color: black;
+    border-radius: 50%;
+}
+
+.container {
+    background: #333;
+    padding: 30px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+
+.player-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px;
+}
+
+#player1Info, #player2Info {
+    width: 150px;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}

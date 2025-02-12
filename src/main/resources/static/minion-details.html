@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minion Land - Minion Details</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Select Your Minions</h1>
+
+    <div class="minion-list">
+        <button onclick="selectMinion(1)">🟢 Minion 1</button>
+        <button onclick="selectMinion(2)">🔵 Minion 2</button>
+        <button onclick="selectMinion(3)">🔴 Minion 3</button>
+        <button onclick="selectMinion(4)">🟡 Minion 4</button>
+        <button onclick="selectMinion(5)">🟢 Minion 5</button>
+    </div>
+
+    <div id="minionDetails" style="display:none;">
+        <h2 id="minionTitle"></h2>
+        <textarea id="minionCode" placeholder="Write your minion's code here..."></textarea>
+        <button onclick="saveMinionCode()">Save Code ✅</button>
+    </div>
+
+    <button onclick="submitAll()">Submit All Minions 🚀</button>
+    <button onclick="goBack()">Back ⬅️</button>
+</div>
+
+<script>
+    const minionData = {};
+
+    function selectMinion(minionNumber) {
+        document.getElementById('minionDetails').style.display = 'block';
+        document.getElementById('minionTitle').innerText = `Minion ${minionNumber} Code`;
+        document.getElementById('minionCode').value = minionData[minionNumber] || '';
+    }
+
+    function saveMinionCode() {
+        const minionNumber = document.getElementById('minionTitle').innerText.split(' ')[1];
+        const code = document.getElementById('minionCode').value;
+        minionData[minionNumber] = code;
+        alert(`Code saved for Minion ${minionNumber}!`);
+    }
+
+    function submitAll() {
+        console.log("Minion Data:", minionData);
+        alert('All minion codes submitted! Ready to start the game.');
+        // ที่นี่สามารถส่งข้อมูลไปยัง backend ได้ในภายหลัง
+        const missingMinions = [];
+
+        // ตรวจสอบว่า Minion ทุกตัวมีโค้ดหรือยัง
+        for (let i = 1; i <= 5; i++) {
+            if (!minionData[i] || minionData[i].trim() === '') {
+                missingMinions.push(i);
+            }
+        }
+
+        if (missingMinions.length > 0) {
+            alert(`Please add code to Minion(s): ${missingMinions.join(', ')}`);
+        } else {
+            alert('All minion codes submitted! Redirecting to the game...');
+
+            // ส่งข้อมูลชื่อผู้เล่นและโหมดไปหน้าเกม
+            const params = new URLSearchParams(window.location.search);
+            const player1 = params.get('player1');
+            const player2 = params.get('player2');
+            const mode = params.get('mode');
+
+            // ส่งข้อมูลไปยังหน้าเกม
+            window.location.href = `game.html?player1=${player1}&player2=${player2}&mode=${mode}`;
+        }
+    }
+
+    function goBack() {
+        window.history.back();  // ย้อนกลับไปหน้า Start Game
+    }
+</script>
+</body>
+</html>

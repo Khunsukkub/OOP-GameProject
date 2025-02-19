@@ -1,0 +1,111 @@
+1 ) Minion strategy is scripted by player and both players agree on the strategy for each kind of minion (cannot be modified in middle)
+
+2 ) Game End by Limited Turn / All minions of player have been eliminated
+
+3 ) the game should read the configuration file for necessary parameters
+
+4 ) player vs player / player vs bot / bot vs bot
+
+5 ) The game supports between 1 to 5 kinds of minions
+
+6 ) Each kind of minion has a defense factor
+
+7 ) and a strategy that will be executed in each turn
+
+8 ) the players should agree on 6,7
+
+9 ) Bot mode need 1 people for setup
+
+10 ) First Minion is free to deploy
+
+11 ) Each player will be given equal amount of initial budget (game)
+
+12 ) If it is new turn, the current player is given additional budget.
+
+13 ) Has a cap budget
+
+14 ) The player will have an opportunity to spawn a new minion in a designated area
+
+15 ) One minion per hex
+
+16 ) 1 spawning the minion per turn
+
+17 ) Max minion is exist
+
+18 ) The player can buy a new hex
+
+19 ) The new hex must be adjacent to the existing hexes
+
+20 ) New spawnable hex and spawning a new minion incur costs (game)
+
+21 ) The oldest minion executes its strategy first
+
+22 ) Interface's value is int but in implement is double
+
+23 ) the interest is current budget * interest rate percentage /100
+
+23.1 ) the interest rate percentage is base interate rate percentage * log10 of current budget * ln current turn
+
+24 ) Grammar for minion strategies have been exists
+
+24.1 ) The arithmetic evaluation is fit in Java's long data type
+
+25 ) Variables whose name start with a lowercase letter are local
+
+26 ) Variables whose name start with a uppercase letter are global
+
+27 ) Special variables can read-only
+
+28 ) ** rounded down to integer **
+
+29 ) change spawnsleft to spawnsRemaining
+
+30 ) random is 0-999
+
+31 ) opponent expression is telling you the closet enemy in 6 directions from the minion
+
+32 ) ally expression is opponent expression but ally
+
+33 ) nearby function is telling your closet enemy power in given direction by 100x+10y+z
+
+33.1 ) x,y,z is the number of digits in the HP/DEF/distance of the discovered minion
+
+33.2 ) If that minion is ally, the power will return by negative
+
+33.3 ) If there is no minion in the given direction, the power will return 0
+
+34 ) done command is end minion strategy
+
+35 ) move command is move 1 hex per time
+
+35.1 ) The player's budget is decreased by one unit
+
+35.2 ) If the player is out of budget, the minion will end strategy
+
+36 ) shoot command can attack the enemy around you in given direction
+
+36.1 ) Each attack is given an expenditure (given expenditure + 1)
+
+36.2 ) If the target hex iss unoccupied, the player still pays but the attack itself will have no effects
+
+36.3 ) The damage which the minion is taken is max(0,HP-max(1,DMG-defence factor))
+
+36.4 ) If the HP becomes less than one, the minion dies and disappears from the territory
+
+36.5 ) If the target minion is the ally, The damage will not care about it
+
+37 ) In if or while statements, boolean evaluation is positive integer is true and the others is false
+
+38 ) while loop can't run higher than 10000 times
+
+39 ) The game will end when a player no longer has a minion
+
+39.1 ) If the turn is out the who has more minion left will win
+
+39.2 ) If both player have the same number of minions left, Who has more sum of minion's HP will win
+
+39.3 ) If both player have the sum of minion's HP, Who has more budget will win.
+
+40 ) You can use the Spring Framework to link your Java backend to your web frontend
+
+41 ) The display should have enough information to decide what to do and enjoy the game

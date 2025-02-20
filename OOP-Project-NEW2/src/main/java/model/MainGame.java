@@ -8,7 +8,7 @@ public class MainGame {
     private static Controller controller = Controller.getInstance();
     private static int minionNumber;
     public static int current_turn = 1;
-    private static int max_turns = 69;
+    public static int max_turns = 69;
     public static double init_budget = 10000;
     private static double turn_budget = 90;
     private static double max_budget = 23456;
@@ -59,7 +59,6 @@ public class MainGame {
         getFirstPlayer(player1,player2);
         SetDefaultMap();
         SetDefaultPlayerArea();
-        NewMapGenarate();
         GameDisplay();
     }
 

@@ -62,7 +62,9 @@ public class Map {
         System.out.println("--------------------------------------");
         getCurrentPlayer(current_player);
         showCurrentPlayerStatus();
-        System.out.println("Turn " + MainGame.current_turn);
+        System.out.println("Turn "
+                + MainGame.current_turn + "/" + MainGame.max_turns + "  |  "
+                + "Spawn lefts " + MainGame.spawn_lefts);
         System.out.println("--------------------------------------");
         for (int i = 0; i < col; i++) {
             for (int j = 0; j < row; j++) {

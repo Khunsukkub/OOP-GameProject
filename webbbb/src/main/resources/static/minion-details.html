@@ -16,26 +16,22 @@
 <div class="container">
     <h1>Select Your Minions</h1>
 
-    <!-- เลือกจำนวน Minion -->
     <div id="minionSelection">
         <label for="numMinions">Choose number of Minions (1-5):</label>
         <input type="number" id="numMinions" min="1" max="5" value="1">
         <button onclick="generateMinionButtons()">Confirm ✅</button>
     </div>
 
-    <!-- แสดงปุ่ม Minion -->
     <div class="minion-list" id="minionList"></div>
 
-    <!-- ปุ่มย้อนกลับไปเลือกจำนวน Minion - ใส่ class center-button -->
     <div class="center-button">
         <button id="backToSelection" style="display:none;" onclick="showMinionSelection()">Change Number of Minions ⬅️</button>
     </div>
 
-    <!-- ใส่โค้ดของ Minion -->
     <div id="minionDetails" style="display:none;">
         <h2 id="minionTitle"></h2>
-        <textarea id="minionCode" placeholder="Write your minion's code here..."></textarea>
-        <button onclick="saveMinionCode()">Save Code ✅</button>
+        <textarea id="minionCode" placeholder="Write your minion's code here..."
+                  onchange="updateMinionCode()"></textarea>
     </div>
 
     <button onclick="submitAll()">Submit All Minions 🚀</button>
@@ -75,28 +71,28 @@
         document.getElementById('minionCode').value = minionData[minionNumber] || '';
     }
 
-    function saveMinionCode() {
+    function updateMinionCode() {
         const minionNumber = parseInt(document.getElementById('minionTitle').innerText.split(' ')[1]);
         const code = document.getElementById('minionCode').value;
         minionData[minionNumber] = code;
-        alert(`Code saved for Minion ${minionNumber}!`);
     }
 
     function submitAll() {
-        const missingMinions = [];
+        const emptyMinions = [];
         for (let i = 1; i <= selectedMinions; i++) {
             if (!minionData[i] || minionData[i].trim() === '') {
-                missingMinions.push(i);
+                emptyMinions.push(i);
             }
         }
 
-        if (missingMinions.length > 0) {
-            alert(`Please add code to Minion(s): ${missingMinions.join(', ')}`);
-        } else {
-            alert('All minion codes submitted! Redirecting to the game...');
-            const params = new URLSearchParams(window.location.search);
-            window.location.href = `game.html?player1=${params.get('player1')}&player2=${params.get('player2')}&mode=${params.get('mode')}`;
+        if (emptyMinions.length > 0) {
+            alert(`Please enter code for Minion(s): ${emptyMinions.join(', ')}`);
+            return;
         }
+
+        alert('All minion codes submitted! Redirecting to the game...');
+        const params = new URLSearchParams(window.location.search);
+        window.location.href = `game.html?player1=${params.get('player1')}&player2=${params.get('player2')}&mode=${params.get('mode')}`;
     }
 
     function goBack() {

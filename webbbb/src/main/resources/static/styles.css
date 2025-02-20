@@ -1,175 +1,329 @@
+/* Main styling */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #1c1c1c;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     color: white;
     text-align: center;
     margin: 0;
-    padding: 50px;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .container {
-    background: #333;
-    padding: 30px;
-    border-radius: 10px;
-    display: inline-block;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background: rgba(37, 37, 50, 0.9);
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    max-width: 800px;
+    width: 90%;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Typography */
 h1 {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    font-size: 2.5rem;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
 }
 
+h2 {
+    font-size: 1.8rem;
+    margin: 20px 0;
+    color: #8BC34A;
+}
+
+/* Buttons */
 button {
-    background-color: #4CAF50;
+    background: linear-gradient(to right, #4CAF50, #2E7D32);
     color: white;
-    padding: 12px 20px;
-    margin: 10px;
+    padding: 14px 25px;
+    margin: 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-    display: block;
-    width: 200px;
-    margin-left: auto;
-    margin-right: auto;
+    display: inline-block;
+    width: auto;
+    min-width: 200px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 button:hover {
-    background-color: #45a049;
+    transform: translateY(-3px);
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(to right, #2E7D32, #1B5E20);
 }
 
+button:active {
+    transform: translateY(1px);
+}
+
+/* Form elements */
 input {
-    padding: 10px;
-    margin: 10px;
+    padding: 15px;
+    margin: 15px 0;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     width: 80%;
     max-width: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 16px;
+    transition: all 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.minion-list button {
-    margin: 10px;
-    padding: 15px;
-    font-size: 18px;
-    width: 200px;
+input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.5);
+    background: rgba(255, 255, 255, 0.15);
 }
 
-#minionDetails {
-    margin-top: 20px;
+input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
 textarea {
-    width: 80%;
-    height: 150px;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-family: monospace;
+    width: 90%;
+    height: 180px;
+    margin: 15px 0;
+    padding: 15px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #c5f3c7;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    resize: vertical;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s;
 }
 
+textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.5);
+}
+
+/* Minion selection */
+.minion-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.minion-list button {
+    margin: 0;
+    padding: 15px;
+    font-size: 16px;
+    width: auto;
+    min-width: 150px;
+    background: linear-gradient(45deg, #333, #444);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.minion-list button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #444, #555);
+    border-color: #4CAF50;
+}
+
+.center-button {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Game board */
 .hex-grid {
     position: relative;
-    width: 500px;
-    height: 500px;
-    margin:  auto;
-}
-
-.hex-row {
-    display: flex;
-    justify-content: center;
-    line-height: 0;  /* ทำให้แถวแนบสนิทกัน */
+    width: 550px;
+    height: 550px;
+    margin: 30px auto;
+    perspective: 1000px;
 }
 
 .hex {
     width: 60px;
     height: 60px;
-    background-color: white;
+    background: linear-gradient(145deg, #2a2a38, #3a3a48);
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    border: 2px solid black;
-    position: absolute;  /* ใช้ absolute เพื่อวางตำแหน่งที่กำหนด */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: absolute;
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 
-/* สลับแถวคู่ให้ชิดกัน */
-.hex-row:nth-child(even) {
-    transform: translateX(28px);  /* เลื่อนแถวคู่ให้ชิดแถวคี่ */
+.hex:hover {
+    transform: translateZ(10px);
+    filter: brightness(1.3);
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+    z-index: 10;
 }
 
-/* สีสำหรับ Minion */
+/* Minion pieces */
 .minion {
-    background-color: green;
-    clip-path: circle(40% at 50% 50%);
-    position: relative;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at 30% 30%, #4CAF50, #2E7D32);
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    z-index: 5;
+    cursor: pointer;
+    transition: all 0.3s;
 }
 
 .minion::after {
     content: '';
     position: absolute;
-    top: 15px;
-    left: 25px;
+    top: 25%;
+    left: 25%;
     width: 8px;
     height: 8px;
-    background-color: black;
+    background-color: white;
     border-radius: 50%;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
 
 .enemy-minion {
-    background-color: blue;
-    clip-path: circle(40% at 50% 50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at 30% 30%, #2196F3, #0D47A1);
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    z-index: 5;
+    cursor: pointer;
+    transition: all 0.3s;
 }
 
 .enemy-minion::after {
     content: '';
     position: absolute;
-    top: 15px;
-    left: 25px;
+    top: 25%;
+    left: 25%;
     width: 8px;
     height: 8px;
-    background-color: black;
+    background-color: white;
     border-radius: 50%;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
 
-.container {
-    background: #333;
-    padding: 30px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 80%;
-    margin: 0 auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+.minion:hover, .enemy-minion:hover {
+    transform: scale(1.15);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
-
-
+/* Game info section */
 .player-info {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding: 20px;
+    margin: 20px 0;
 }
 
 #player1Info, #player2Info {
-    width: 150px;
-    background-color: #333;
+    width: 45%;
+    background: rgba(0, 0, 0, 0.2);
     color: white;
-    padding: 10px;
+    padding: 15px;
     border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    margin: 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    display: block;
-    width: 200px;
-    margin-left: auto;
-    margin-right: auto;
+#player1Info {
+    background: linear-gradient(to right, rgba(76, 175, 80, 0.1), rgba(0, 0, 0, 0.2));
+    border-left: 3px solid #4CAF50;
 }
+
+#player2Info {
+    background: linear-gradient(to right, rgba(33, 150, 243, 0.1), rgba(0, 0, 0, 0.2));
+    border-left: 3px solid #2196F3;
+}
+
+/* Turn display */
+#turnDisplay {
+    font-size: 1.8rem;
+    color: #FFC107;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    margin-bottom: 5px;
+    animation: pulse 2s infinite;
+}
+
+#currentPlayer {
+    font-size: 1.5rem;
+    margin-top: 0;
+    color: #E0E0E0;
+}
+
+/* Game controls */
+.game-controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .hex-grid {
+        width: 100%;
+        height: 300px;
+    }
+
+    .minion-list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .player-info {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #player1Info, #player2Info {
+        width: 90%;
+        margin-bottom: 15px;
+    }
+}
+
+/* Add font imports */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Source+Code+Pro&display=swap');

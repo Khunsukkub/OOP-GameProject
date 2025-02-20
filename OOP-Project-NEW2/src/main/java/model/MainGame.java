@@ -7,7 +7,7 @@ public class MainGame {
     private static Map map = Map.getInstance();
     private static Controller controller = Controller.getInstance();
     private static int minionNumber;
-    private int current_turn = 0;
+    public static int current_turn = 1;
     private static int max_turns = 69;
     public static double init_budget = 10000;
     private static double turn_budget = 90;
@@ -16,6 +16,7 @@ public class MainGame {
     public static int spawn_lefts = max_spawns;
     public static Minion[] minionList;
     public static Player current_player;
+    public static Player opponent_player;
 
     static Random rand = new Random();
 
@@ -27,19 +28,37 @@ public class MainGame {
     }
 
     public static void getFirstPlayer(Player player1, Player player2) {
-        int numberOfCurremtPlayer = rand.nextInt(2) + 1;
-        current_player = (numberOfCurremtPlayer == 1)? player1 : player2;
+        int numberOfCurrentPlayer = rand.nextInt(2) + 1;
+        current_player = (numberOfCurrentPlayer == 1)? player1 : player2;
+        opponent_player = (current_player == player1)? player2 : player1;
     }
 
-    private void turnInterest (Player player , int current_turn) {
-       player.budget += Interest.pct(player.budget,current_turn);
+    private void togglePlayer(){
+        Player temp = current_player;
+        current_player = opponent_player;
+        opponent_player = temp;
+    }
+
+    public void endTurn(){
+        current_turn++;
+        double turnIncome = turnInterest(opponent_player, current_turn);
+        System.out.println("--------------------------------------");
+        System.out.println(opponent_player.name + " got " + turnIncome + " !!");
+        System.out.println("--------------------------------------");
+        togglePlayer();
+        GameDisplay();
+    }
+
+    public double turnInterest (Player player , int current_turn) {
+        return player.budget += Interest.pct(player.budget,current_turn);
     }
 
     public static void GameSetting(Player player1, Player player2) {
         minionNumber = MinionChoosing.chooseMinionNumber();
         MinionSetting.design(minionNumber);
         getFirstPlayer(player1,player2);
-        GetDefaultPlayerArea();
+        SetDefaultMap();
+        SetDefaultPlayerArea();
         NewMapGenarate();
         GameDisplay();
     }
@@ -48,7 +67,11 @@ public class MainGame {
         showController(current_player);
     }
 
-    private static void GetDefaultPlayerArea() {
+    public static void SetDefaultMap() {
+        map.initializeMap();
+    }
+
+    private static void SetDefaultPlayerArea() {
         map.getDefaultPlayerArea();
     }
 
@@ -60,7 +83,7 @@ public class MainGame {
         System.out.println(spawn_lefts);
     }
 
-    private static void NewMapGenarate() {
+    public static void NewMapGenarate() {
         map.generateNewMap(current_player);
     }
 

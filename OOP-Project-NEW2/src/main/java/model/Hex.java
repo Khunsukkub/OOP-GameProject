@@ -1,10 +1,10 @@
 package model;
 
 public class Hex {
-    public static int playerNumber;
-    public static boolean ownerState = false;
-    public static Minion minion;
-    public static boolean minionState = false;
+    public int playerNumber;
+    public boolean ownerState = false;
+    public Minion minion;
+    public boolean minionState = false;
     public int row;
     public int col;
 
@@ -19,18 +19,25 @@ public class Hex {
         boolean ownerState = false;
     }
 
-    public static boolean isOwner() {
+    public boolean isOwner() {
         return ownerState;
     }
-    public static String getOwner() {
-        return playerNumber + "";
+    public int getOwner() {
+        return playerNumber;
     }
 
-    public static void setOwner(Player player) {
+    public void setOwner(Player player) {
         playerNumber = player.Number;
         ownerState = true;
     }
 
-    public static boolean hasMinion() {return minionState;}
+    public void setMinion(Minion minion) {
+        minionState = true;
+        this.minion = minion;
+    }
+
+
+
+    public boolean hasMinion() {return minionState;}
 }
 

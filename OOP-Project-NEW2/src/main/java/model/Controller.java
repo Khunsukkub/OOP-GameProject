@@ -5,7 +5,8 @@ import java.util.Scanner;
 public class Controller {
     private static Controller instance;
     private static MainGame mainGame = MainGame.getInstance();
-    private static Player current_player;
+    private static Map map = Map.getInstance();
+    private static Scanner scanner = new Scanner(System.in); // ใช้ Scanner เดียวกัน
 
     public static Controller getInstance() {
         if (instance == null) {
@@ -14,62 +15,100 @@ public class Controller {
         return instance;
     }
 
-    private static void getPlayer(Player player) {
-        current_player = player;
+    public static void show(Player player) {
+        MainGame.NewMapGenarate();
+        System.out.println("( BuyMinion / BuyHex / END )");
+        actionSystem(player);
     }
 
-    public static void show(Player player1) {
-        getPlayer(player1);
-        System.out.println("(  BuyMinion  /" + "  BuyHex  /" + "  END  )");
-        actionSystem(player1);
-    }
-    public static void actionSystem(Player player1) {
-        System.out.print("Please enter your action : " );
-        Scanner scanner = new Scanner(System.in);
-        String action = scanner.nextLine();
-
-        action = action.toLowerCase();
+    public static void actionSystem(Player player) {
+        System.out.print("Please enter your action: ");
+        String action = scanner.nextLine().toLowerCase(); // ใช้ scanner เดียวกัน
 
         switch (action) {
             case "buyminion":
-                if(MainGame.spawn_lefts != 0) buyMinion(current_player);
-                show(player1);
+                if (MainGame.spawn_lefts != 0) buyMinion(player);
+                show(player);
                 break;
             case "buyhex":
-//                buyHex(current_player);
-//                show(current_player);
-                  break;
-            case "end" :
-//                endTurn();
+//                buyHex(player1);
+//                show(player1);
+                break;
+            case "end":
+                mainGame.endTurn();
+                break;
+            default:
+                System.out.println("Invalid action! Please try again.");
+                show(player);
         }
     }
 
-    public static void buyMinion(Player player1) {
-        System.out.println("Minion in stock : ");
-        for(int i = 0; i < MainGame.minionList.length ; i++) {
-            System.out.println("   " + MainGame.minionList[i].name + "  |  cost:" + MainGame.minionList[i].spawn_cost);
+    public static void buyMinion(Player player) {
+        System.out.println("Minion in stock:");
+        for (Minion minion : MainGame.minionList) {
+            System.out.println("   " + minion.name + "  |  cost: " + minion.spawn_cost);
         }
         System.out.println("EXIT");
-        System.out.print("Please enter minion you want to buy : " );
-        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Please enter the minion you want to buy: ");
         String action = scanner.nextLine();
-        for(int i = 0; i < MainGame.minionList.length ; i++) {
-            if(isEnoughBudget(action , i)) {
-                current_player.addMinion(MainGame.minionList[i]);
-                current_player.budget -= MainGame.minionList[i].spawn_cost;
-                MainGame.spawn_lefts--;
-                System.out.println(current_player + " bought " + " " + MainGame.minionList[i].name + "!!" );
-                //DeployMinion();
-            } else {
-                System.out.println("You don't have enough Budget/Hex/SpawnLefts to buy this minion");
+
+        for (int i = 0; i < MainGame.minionList.length; i++) {
+            if (isEnoughBudget(action, i, player)) {
+                Minion minion = MainGame.minionList[i];
+                player.addMinion(minion);
+                player.budget -= minion.spawn_cost;
+                System.out.println(player.name + " bought " + minion.name + "!!");
+                deploy(minion,player);
+                return; // ออกจาก loop ทันทีเมื่อซื้อสำเร็จ
             }
+        }
+        System.out.println("You don't have enough Budget/Hex/SpawnLefts to buy this minion.");
+    }
+
+    public static boolean isEnoughBudget(String action, int index, Player player) {
+        return (action.equals(MainGame.minionList[index].name)
+                && player.budget >= MainGame.minionList[index].spawn_cost
+                && player.ownMinion.length < player.ownHex.length); // ใช้ size() แทน length
+    }
+
+    private static void deploy(Minion minion , Player player) {
+        System.out.print("Choose Hex to deploy [row,col]: ");
+        String hex = scanner.nextLine().trim(); // รับค่า input และลบช่องว่างด้านหน้า/หลัง
+
+        try {
+            String[] coordinates = hex.split(","); // แยกค่าจาก input
+            int row = Integer.parseInt(coordinates[0].trim());
+            int col = Integer.parseInt(coordinates[1].trim());
+            row--;
+            col--;
+
+            Hex targetHex = map.getHexAt(row, col--); // ดึง `Hex` ที่ตำแหน่งนั้น
+
+            if (targetHex == null) {
+                System.out.println("Invalid Hex! Please choose a valid location.");
+                deploy(minion, player);
+                return;
+            }
+            if (targetHex.getOwner() != player.Number) {
+                System.out.println("You can only deploy minions on your own Hex.");
+                deploy(minion, player);
+                return;
+            }
+            if (targetHex.hasMinion()) {
+                System.out.println("This Hex already has a minion!");
+                deploy(minion, player);
+                return;
+            }
+
+            // วาง Minion บน Hex
+            targetHex.setMinion(minion);
+            System.out.println("Minion " + minion.name + " deployed at (" + row + "," + col + ")");
+            MainGame.spawn_lefts--;
+
+        } catch (Exception e) {
+            System.out.println("Invalid input! Please enter coordinates in the format: row,col");
         }
     }
 
-    public static boolean isEnoughBudget(String action, int index) {
-        return (action.equals(MainGame.minionList[index])
-                && current_player.budget >= MainGame.minionList[index].spawn_cost
-                && current_player.ownMinion.length != current_player.ownHex.length
-                );
-    }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minion Land - Game</title>
+    <title>K.O.M.B.A.T - Game</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,12 +16,23 @@
         <div id="player2Info"></div>
     </div>
 
+
+
+    <!-- ปุ่ม Buy Tile และ Buy Minion อยู่ในบรรทัดเดียวกัน -->
+    <div class="top-buttons">
+        <button onclick="buyTile()">Buy Tile 🏠</button>
+        <button onclick="buyMinion()">Buy Minion 🤖</button>
+    </div>
+
+
     <div class="hex-grid" id="gameBoard"></div>
 
-    <button onclick="buyTile()">Buy Tile 🏠</button>
-    <button onclick="buyMinion()">Buy Minion 🤖</button>
-    <button onclick="endTurn()">End Turn 🔄</button>
+    <!-- ปุ่ม End Turn แยกออกมาอยู่ด้านล่าง -->
+    <button class="end-turn" onclick="endTurn()">End Turn 🔄</button>
+
 </div>
+
+
 
 <script>
     let turn = 1;

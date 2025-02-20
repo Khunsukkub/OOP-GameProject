@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Over</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1c1c1c;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            text-align: center;
+        }
+        .trophy {
+            font-size: 100px;
+            color: gold;
+        }
+        .winner {
+            margin-top: 20px;
+            font-size: 2em;
+        }
+        .restart-button {
+            margin-top: 30px;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .restart-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div class="trophy">🏆</div>
+    <div class="winner" id="winnerText">Player X Wins!</div>
+    <button class="restart-button" onclick="restartGame()">Play Again</button>
+</div>
+
+<script>
+    // รับชื่อผู้ชนะจาก query parameter
+    const params = new URLSearchParams(window.location.search);
+    const winner = params.get('winner') || 'Player X';
+    document.getElementById('winnerText').innerText = `${winner} Wins!`;
+
+    function restartGame() {
+        window.location.href = 'index.html';
+    }
+</script>
+</body>
+</html>

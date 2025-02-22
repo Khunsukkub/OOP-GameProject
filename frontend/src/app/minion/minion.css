@@ -1,0 +1,23 @@
+/* ใช้กับหน้า Minion*/
+.minion-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.minion-list button {
+    padding: 15px;
+    font-size: 16px;
+    min-width: 150px;
+    background: linear-gradient(45deg, #333, #444);
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.minion-list button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #444, #555);
+    border-color: #4CAF50;
+}

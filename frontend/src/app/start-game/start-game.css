@@ -1,0 +1,9 @@
+/* ใช้กับหน้ากรอกชื่อผู้เล่น*/
+input {
+    width: 80%;
+    max-width: 300px;
+}
+
+.back-button {
+    margin-top: 20px;
+}

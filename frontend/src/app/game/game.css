@@ -1,0 +1,47 @@
+/* ใช้กับกระดานเกมหลัก*/
+.hex-grid {
+    position: relative;
+    width: 550px;
+    height: 550px;
+    margin-top: 10px;
+    margin-left: 200px;
+    perspective: 1000px;
+}
+
+.hex {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(145deg, #2a2a38, #3a3a48);
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: absolute;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.hex:hover {
+    transform: translateZ(10px);
+    filter: brightness(1.3);
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+    z-index: 10;
+}
+
+.minion, .enemy-minion {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    z-index: 5;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.minion {
+    background: radial-gradient(circle at 30% 30%, #4CAF50, #2E7D32);
+}
+
+.enemy-minion {
+    background: radial-gradient(circle at 30% 30%, #2196F3, #0D47A1);
+}
+

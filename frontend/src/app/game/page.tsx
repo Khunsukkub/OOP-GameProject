@@ -3,19 +3,34 @@
 import React, { useState, useEffect } from "react";
 import GameBoard from "@/components/GameBoard";
 import PlayerInfo from "@/components/PlayerInfo";
+import MinionShop from "@/components/MinionShop";
 import "./game.css";
 
 const GamePage: React.FC = () => {
     const [turn, setTurn] = useState<number>(1);
     const [currentPlayer, setCurrentPlayer] = useState<string>("Player 1");
-    const [playerData, setPlayerData] = useState<Record<string, { money: number; minions: string[] }>>({
+    const [showShop, setShowShop] = useState<boolean>(false);
+
+    // **ข้อมูลมินเนี่ยนที่ผู้เล่นเลือก**
+    const [playerData, setPlayerData] = useState<Record<string, {
+        money: number;
+        minions: { name: string; color: string; cost: number }[];
+    }>>({
         "Player 1": { money: 100, minions: [] },
         "Player 2": { money: 100, minions: [] },
     });
 
     useEffect(() => {
-        setCurrentPlayer("Player 1");
+        // โหลด Minion ที่ผู้เล่นเลือกไว้จาก LocalStorage
+        const storedMinions = localStorage.getItem("selectedMinions");
+        if (storedMinions) {
+            setPlayerData({
+                "Player 1": { money: 100, minions: JSON.parse(storedMinions) },
+                "Player 2": { money: 100, minions: [] }, // ผู้เล่น 2 ยังไม่มี Minion
+            });
+        }
     }, []);
+
 
     const endTurn = () => {
         setTurn(turn + 1);
@@ -36,20 +51,30 @@ const GamePage: React.FC = () => {
             alert(`${currentPlayer} doesn't have enough money to buy a tile!`);
         }
     };
+    const openMinionShop = () => {
+        console.log("Minions Available:", playerData[currentPlayer].minions);
+        setShowShop(true);
+    };
 
-    const buyMinion = () => {
-        if (playerData[currentPlayer].money >= 30) {
+
+    const closeMinionShop = () => {
+        setShowShop(false);
+    };
+
+    const buyMinion = (name: string, color: string, cost: number) => {
+        if (playerData[currentPlayer].money >= cost) {
             setPlayerData({
                 ...playerData,
                 [currentPlayer]: {
                     ...playerData[currentPlayer],
-                    money: playerData[currentPlayer].money - 30,
-                    minions: [...playerData[currentPlayer].minions, `Minion ${playerData[currentPlayer].minions.length + 1}`],
+                    money: playerData[currentPlayer].money - cost,
+                    minions: [...playerData[currentPlayer].minions, { name, color, cost }],
                 },
             });
-            alert(`${currentPlayer} bought a Minion!`);
+            alert(`${currentPlayer} bought a ${name} minion!`);
+            setShowShop(false);
         } else {
-            alert(`${currentPlayer} doesn't have enough money to buy a Minion!`);
+            alert(`${currentPlayer} doesn't have enough money to buy ${name}!`);
         }
     };
 
@@ -63,10 +88,20 @@ const GamePage: React.FC = () => {
 
             <div className="top-buttons">
                 <button onClick={buyTile}>Buy Tile 🏠</button>
-                <button onClick={buyMinion}>Buy Minion 🤖</button>
+                <button onClick={openMinionShop}>Buy Minion 🤖</button>
             </div>
 
-            <GameBoard />
+            <div className="game-content">
+                <GameBoard minions={[]} />
+
+                {showShop && (
+                    <MinionShop
+                        minionList={playerData[currentPlayer].minions}
+                        onClose={closeMinionShop}
+                        onBuyMinion={buyMinion}
+                    />
+                )}
+            </div>
 
             <button className="end-turn" onClick={endTurn}>
                 End Turn 🔄

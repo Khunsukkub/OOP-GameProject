@@ -38,9 +38,10 @@ const StartGamePage: React.FC = () => {
                 value={player2}
                 onChange={(e) => setPlayer2(e.target.value)}
             />
-
             <button onClick={startGame}>Start Game 🎮</button>
             <button onClick={() => router.push("/mode")}>Back ⬅️</button>
+
+
         </div>
     );
 };

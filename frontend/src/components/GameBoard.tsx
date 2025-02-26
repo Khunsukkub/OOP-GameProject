@@ -29,7 +29,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ minions }) => {
         for (let r = 0; r < rows; r++) {
             for (let q = 0; q < cols; q++) {
                 const x = size * 1.5 * q;
-                const y = size * Math.sqrt(3) * (r + 0.5 * (q % 2));
+                // เปลี่ยนวิธีการคำนวณ y เพื่อให้แถวเลขคี่อยู่ต่ำกว่าแถวเลขคู่
+                const y = size * Math.sqrt(3) * (r - 0.5 * (q % 2));
 
                 const hex = document.createElement("div");
                 hex.className = "hex";
@@ -38,7 +39,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ minions }) => {
             }
         }
 
-        // **แสดง Minion ที่ตำแหน่งของพวกเขา**
+        // แสดง Minion ที่ตำแหน่งของพวกเขา
         minions.forEach((minion) => {
             placeMinion(minion);
         });
@@ -52,7 +53,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ minions }) => {
         const { q, r } = minion.position;
 
         const x = size * 1.5 * q;
-        const y = size * Math.sqrt(3) * (r + 0.5 * (q % 2));
+        // ต้องแก้ไขสูตรเดียวกันที่ใช้ในการวาง minion ด้วย
+        const y = size * Math.sqrt(3) * (r - 0.5 * (q % 2));
 
         const minionElement = document.createElement("div");
         minionElement.className = "minion";

@@ -11,7 +11,7 @@ const GamePage: React.FC = () => {
     const [currentPlayer, setCurrentPlayer] = useState<string>("Player 1");
     const [showShop, setShowShop] = useState<boolean>(false);
 
-    // **ข้อมูลมินเนี่ยนที่ผู้เล่นเลือก**
+    // **ข้อมูลมินเนี่ยนของผู้เล่น**
     const [playerData, setPlayerData] = useState<Record<string, {
         money: number;
         minions: { name: string; color: string; cost: number }[];
@@ -21,41 +21,39 @@ const GamePage: React.FC = () => {
     });
 
     useEffect(() => {
-        // โหลด Minion ที่ผู้เล่นเลือกไว้จาก LocalStorage
-        const storedMinions = localStorage.getItem("selectedMinions");
-        if (storedMinions) {
-            setPlayerData({
-                "Player 1": { money: 100, minions: JSON.parse(storedMinions) },
-                "Player 2": { money: 100, minions: [] }, // ผู้เล่น 2 ยังไม่มี Minion
-            });
-        }
-    }, []);
+        // โหลด Minion ของผู้เล่น 1 และ 2 จาก localStorage
+        const minionsP1 = localStorage.getItem("selectedMinions-1");
+        const minionsP2 = localStorage.getItem("selectedMinions-2");
 
+        setPlayerData({
+            "Player 1": { money: 100, minions: minionsP1 ? JSON.parse(minionsP1) : [] },
+            "Player 2": { money: 100, minions: minionsP2 ? JSON.parse(minionsP2) : [] },
+        });
+    }, []);
 
     const endTurn = () => {
         setTurn(turn + 1);
-        setCurrentPlayer(currentPlayer === "Player 1" ? "Player 2" : "Player 1");
+        setCurrentPlayer((prev) => (prev === "Player 1" ? "Player 2" : "Player 1"));
     };
 
     const buyTile = () => {
         if (playerData[currentPlayer].money >= 20) {
-            setPlayerData({
-                ...playerData,
+            setPlayerData((prev) => ({
+                ...prev,
                 [currentPlayer]: {
-                    ...playerData[currentPlayer],
-                    money: playerData[currentPlayer].money - 20,
+                    ...prev[currentPlayer],
+                    money: prev[currentPlayer].money - 20,
                 },
-            });
+            }));
             alert(`${currentPlayer} bought a tile!`);
         } else {
             alert(`${currentPlayer} doesn't have enough money to buy a tile!`);
         }
     };
+
     const openMinionShop = () => {
-        console.log("Minions Available:", playerData[currentPlayer].minions);
         setShowShop(true);
     };
-
 
     const closeMinionShop = () => {
         setShowShop(false);
@@ -63,14 +61,14 @@ const GamePage: React.FC = () => {
 
     const buyMinion = (name: string, color: string, cost: number) => {
         if (playerData[currentPlayer].money >= cost) {
-            setPlayerData({
-                ...playerData,
+            setPlayerData((prev) => ({
+                ...prev,
                 [currentPlayer]: {
-                    ...playerData[currentPlayer],
-                    money: playerData[currentPlayer].money - cost,
-                    minions: [...playerData[currentPlayer].minions, { name, color, cost }],
+                    ...prev[currentPlayer],
+                    money: prev[currentPlayer].money - cost,
+                    minions: [...prev[currentPlayer].minions, { name, color, cost }],
                 },
-            });
+            }));
             alert(`${currentPlayer} bought a ${name} minion!`);
             setShowShop(false);
         } else {

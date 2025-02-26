@@ -45,3 +45,29 @@
     background: radial-gradient(circle at 30% 30%, #2196F3, #0D47A1);
 }
 
+.minion-list {
+    display: flex;
+    flex-wrap: wrap; /* ถ้ามีหลายตัวให้ขึ้นบรรทัดใหม่ */
+    justify-content: center; /* จัดให้อยู่ตรงกลาง */
+    gap: 15px; /* ระยะห่างระหว่าง Minion */
+    margin-top: 10px;
+    flex-direction: row; /* ✅ จัดมินเนี่ยนให้อยู่ในแถวเดียวกัน */
+}
+
+.minion-item {
+    display: flex;
+    flex-direction: row; /* ✅ เปลี่ยนจาก column เป็น row */
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    gap: 10px; /* ✅ เพิ่มระยะห่างระหว่างไอคอนและชื่อ */
+}
+
+.minion-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}

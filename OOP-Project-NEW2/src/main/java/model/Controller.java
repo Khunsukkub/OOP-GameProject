@@ -7,6 +7,8 @@ public class Controller {
     private static MainGame mainGame = MainGame.getInstance();
     private static Map map = Map.getInstance();
     private static Scanner scanner = new Scanner(System.in); // ใช้ Scanner เดียวกัน
+    public static boolean buyMinionState = false;
+    public static boolean buyHexState = false;
 
     public static Controller getInstance() {
         if (instance == null) {
@@ -21,9 +23,23 @@ public class Controller {
         actionSystem(player);
     }
 
-    public static void actionSystem(Player player) {
+    private static void actionSystem(Player player) {
         System.out.print("Please enter your action: ");
         String action = scanner.nextLine().toLowerCase(); // ใช้ scanner เดียวกัน
+
+        if(action.equals("buyminion")) {
+            if(buyMinionState) {
+                System.out.println("You are bought MINION already!");
+                show(player);
+            }
+        }
+
+        if(action.equals("buyhex")) {
+            if(buyHexState) {
+                System.out.println("You are bought HEX already!");
+                show(player);
+            }
+        }
 
         switch (action) {
             case "buyminion":
@@ -31,8 +47,8 @@ public class Controller {
                 show(player);
                 break;
             case "buyhex":
-//                buyHex(player1);
-//                show(player1);
+                buyHex(player);
+                show(player);
                 break;
             case "end":
                 mainGame.endTurn();
@@ -43,7 +59,11 @@ public class Controller {
         }
     }
 
-    public static void buyMinion(Player player) {
+    private static void buyHex(Player player) {
+        map.showBuyAbleHex(player);
+    }
+
+    private static void buyMinion(Player player) {
         System.out.println("Minion in stock:");
         for (Minion minion : MainGame.minionList) {
             System.out.println("   " + minion.name + "  |  cost: " + minion.spawn_cost);
@@ -59,14 +79,16 @@ public class Controller {
                 player.addMinion(minion);
                 player.budget -= minion.spawn_cost;
                 System.out.println(player.name + " bought " + minion.name + "!!");
+                buyMinionState = true;
                 deploy(minion,player);
                 return; // ออกจาก loop ทันทีเมื่อซื้อสำเร็จ
             }
         }
         System.out.println("You don't have enough Budget/Hex/SpawnLefts to buy this minion.");
+        buyMinionState = false;
     }
 
-    public static boolean isEnoughBudget(String action, int index, Player player) {
+    private static boolean isEnoughBudget(String action, int index, Player player) {
         return (action.equals(MainGame.minionList[index].name)
                 && player.budget >= MainGame.minionList[index].spawn_cost
                 && player.ownMinion.length < player.ownHex.length); // ใช้ size() แทน length

@@ -12,7 +12,7 @@ public class MinionSetting {
         String minionName = "";
 
         for (int i = 0; i < minionNumber; i++) {
-
+            System.out.println("--------------------------------------");
             System.out.println("GuGu GaGa Simba Kuku Pupo");
             boolean isValidMinion = false;
 

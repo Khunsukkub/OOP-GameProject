@@ -21,6 +21,10 @@ public class Minion {
         this.strategy = strategy;
     }
 
+    public double getHP() {
+        return hp;
+    }
+
 
 
 }

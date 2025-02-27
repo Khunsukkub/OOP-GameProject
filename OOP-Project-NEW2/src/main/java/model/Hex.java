@@ -7,6 +7,7 @@ public class Hex {
     public boolean minionState = false;
     public int row;
     public int col;
+    private double hex_price = 1000;
 
     public static int totalInRow = 8;
     public static int totalInCol = 8;
@@ -39,5 +40,6 @@ public class Hex {
 
 
     public boolean hasMinion() {return minionState;}
+    public double getHexPrice() {return hex_price;}
 }
 

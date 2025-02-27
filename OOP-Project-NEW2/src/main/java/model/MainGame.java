@@ -40,13 +40,63 @@ public class MainGame {
     }
 
     public void endTurn(){
+        victoryCheck(current_player , opponent_player);
         current_turn++;
         double turnIncome = turnInterest(opponent_player, current_turn);
         System.out.println("--------------------------------------");
         System.out.println(opponent_player.name + " got " + turnIncome + " !!");
         System.out.println("--------------------------------------");
         togglePlayer();
+        controller.buyMinionState = false;
+        controller.buyHexState = false;
         GameDisplay();
+    }
+
+    private void victoryCheck(Player player1, Player player2) {
+        if(player1.ownMinion == null) {
+                System.out.println(player1.name + " LOST!");
+                //gameEnd();
+        } else if (player2.ownMinion == null) {
+            System.out.println(player2.name + " LOST!");
+            //gameEnd();
+        }
+
+        double player1SumMinionHP = getSumMinionHP(player1);
+        double player2SumMinionHP = getSumMinionHP(player2);
+
+        if(current_turn == max_turns) {
+            if(player1.getMinionNumber()  > player2.getMinionNumber()) {
+                System.out.println(player1.name + " WON!");
+                //gameEnd();
+            } else if (player2.getMinionNumber() > player1.getMinionNumber()) {
+                System.out.println(player2.name + " WON!");
+                //gameEnd();
+            } else {
+                if(player1SumMinionHP > player2SumMinionHP) {
+                    System.out.println(player1.name + " WON!");
+                    //gameEnd();
+                } else if (player2SumMinionHP > player1SumMinionHP) {
+                    System.out.println(player2.name + " WON!");
+                    //gameEnd();
+                } else {
+                    if (player1.budget > player2.budget) {
+                        System.out.println(player1.name + " WON!");
+                        //gameEnd();
+                    } else if (player2.budget > player1.budget) {
+                        System.out.println(player2.name + " WON!");
+                        //gameEnd();
+                    }
+                }
+            }
+        }
+    }
+
+    private double getSumMinionHP(Player player) {
+        double SumMinionHP = 0;
+        for (int i = 0 ; i < player.getMinionNumber() ; i++) {
+            SumMinionHP += player.ownMinion[i].getHP();
+        }
+        return SumMinionHP;
     }
 
     public double turnInterest (Player player , int current_turn) {

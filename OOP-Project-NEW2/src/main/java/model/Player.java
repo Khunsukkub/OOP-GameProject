@@ -7,7 +7,8 @@ public class Player {
     public double budget = 0;
     public Hex[] ownHex = new Hex[Hex.total];
     public Minion[] ownMinion = new Minion[MainGame.max_spawns];
-    public int current_Minion = 0;
+    private int MinionNumber = 0;
+    private int HexNumber = 0;
     public int Number = 0;
 
     public Player(String name, double Budget, int playerNumber) {
@@ -17,8 +18,21 @@ public class Player {
     }
 
     public void addMinion (Minion minion) {
-        ownMinion[current_Minion] = minion;
-        current_Minion++;
+        ownMinion[MinionNumber] = minion;
+        MinionNumber++;
+    }
+
+    public void addHex (Hex hex) {
+        ownHex[HexNumber] = hex;
+        HexNumber++;
+    }
+
+    public int getMinionNumber() {
+        return MinionNumber;
+    }
+
+    public int getHexNumber() {
+        return HexNumber;
     }
 
 }

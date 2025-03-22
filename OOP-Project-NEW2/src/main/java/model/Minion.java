@@ -13,7 +13,7 @@ public class Minion {
         //new MinionStrategyParser(strategy);
     }
 
-    Minion(String name, double init_hp , double defense_factor , int spawn_cost , String strategy) {
+    public Minion(String name, double init_hp , double defense_factor , int spawn_cost , String strategy) {
         this.name = name;
         this.init_hp = init_hp;
         this.defense_factor = defense_factor;

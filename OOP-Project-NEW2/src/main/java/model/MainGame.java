@@ -27,6 +27,14 @@ public class MainGame {
         return instance;
     }
 
+    public static void setNumberOfMinion (int number) {
+        minionNumber = number;
+    }
+
+    public static String  getNumberOfMinion() {
+        return String.valueOf(minionNumber);
+    }
+
     public static void getFirstPlayer(Player player1, Player player2) {
         int numberOfCurrentPlayer = rand.nextInt(2) + 1;
         current_player = (numberOfCurrentPlayer == 1)? player1 : player2;
@@ -104,7 +112,6 @@ public class MainGame {
     }
 
     public static void GameSetting(Player player1, Player player2) {
-        minionNumber = MinionChoosing.chooseMinionNumber();
         MinionSetting.design(minionNumber);
         getFirstPlayer(player1,player2);
         SetDefaultMap();

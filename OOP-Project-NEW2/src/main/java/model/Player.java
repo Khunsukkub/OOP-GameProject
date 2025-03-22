@@ -17,6 +17,10 @@ public class Player {
         this.Number = playerNumber;
     }
 
+    public void addMinionList (Minion minion) {
+        MinionState.addMinion(Number,minion);
+    }
+
     public void addMinion (Minion minion) {
         ownMinion[MinionNumber] = minion;
         MinionNumber++;

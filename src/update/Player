@@ -1,0 +1,61 @@
+ปรับปรุงคลาส Player (เพิ่ม method สำหรับนับ minion และคำนวณ HP รวม)
+File: src/main/java/model/Player.java
+
+package model;
+
+public class Player {
+    private String name;
+    private double budget;
+    private Minion[] ownMinion = new Minion[MainGame.max_spawns];
+    private int minionCount = 0;
+
+    public Player(String name, double budget, int playerNumber) {
+        this.name = name;
+        this.budget = budget;
+        // playerNumber สามารถเก็บไว้ใช้ตรวจสอบใน MapUtil
+        this.playerId = playerNumber;
+    }
+
+    // เพิ่ม field สำหรับ player ID
+    private int playerId;
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getBudget() {
+        return budget;
+    }
+
+    public void setBudget(double budget) {
+        this.budget = budget;
+    }
+
+    public void addMinion(Minion minion) {
+        ownMinion[minionCount] = minion;
+        minionCount++;
+    }
+
+    public int getMinionCount() {
+        return minionCount;
+    }
+
+    public double getTotalMinionHP() {
+        double total = 0;
+        for (int i = 0; i < minionCount; i++) {
+            total += ownMinion[i].getHP();
+        }
+        return total;
+    }
+
+    public Minion[] getMinions() {
+        Minion[] result = new Minion[minionCount];
+        for (int i = 0; i < minionCount; i++) {
+            result[i] = ownMinion[i];
+        }
+        return result;
+    }
+}

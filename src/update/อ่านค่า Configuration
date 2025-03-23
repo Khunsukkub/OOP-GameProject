@@ -1,0 +1,58 @@
+File: src/main/java/model/GameConfig.java
+ไฟล์ตัวอย่าง application.properties
+game.initialBudget=10000
+game.maxTurn=69
+game.baseInterestRate=5
+game.hexCost=1000
+game.maxSpawns=47
+
+package model;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ConfigurationProperties(prefix = "game")
+public class GameConfig {
+    private double initialBudget;
+    private int maxTurn;
+    private double baseInterestRate;
+    private double hexCost;
+    private int maxSpawns;
+
+    // Getters and Setters
+    public double getInitialBudget() {
+        return initialBudget;
+    }
+    public void setInitialBudget(double initialBudget) {
+        this.initialBudget = initialBudget;
+    }
+    public int getMaxTurn() {
+        return maxTurn;
+    }
+    public void setMaxTurn(int maxTurn) {
+        this.maxTurn = maxTurn;
+    }
+    public double getBaseInterestRate() {
+        return baseInterestRate;
+    }
+    public void setBaseInterestRate(double baseInterestRate) {
+        this.baseInterestRate = baseInterestRate;
+    }
+    public double getHexCost() {
+        return hexCost;
+    }
+    public void setHexCost(double hexCost) {
+        this.hexCost = hexCost;
+    }
+    public int getMaxSpawns() {
+        return maxSpawns;
+    }
+    public void setMaxSpawns(int maxSpawns) {
+        this.maxSpawns = maxSpawns;
+    }
+}
+
+
+
+

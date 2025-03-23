@@ -1,0 +1,117 @@
+นี่คือ REST Controller ที่รับคำสั่งจาก frontend (ซื้อ tile, ซื้อ minion, จบเทิร์น, เริ่มเกม ฯลฯ
+package com.example.oopprojectnew2.controller;
+
+import model.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "*")
+public class GameController {
+
+    // Endpoint เริ่มต้นเกม รับข้อมูลโหมดและชื่อผู้เล่น
+    @PostMapping("/game/init")
+    public ResponseEntity<?> initGame(@RequestBody InitGameRequest request) {
+        // สร้างผู้เล่นสองคนและตั้งค่าเกม
+        Player player1 = new Player(request.getPlayer1(), MainGame.init_budget, 1);
+        Player player2 = new Player(request.getPlayer2(), MainGame.init_budget, 2);
+        MapUtil.setPlayers(player1, player2);
+        MainGame.GameSetting(player1, player2);
+        return new ResponseEntity<>(getGameStateData(), HttpStatus.OK);
+    }
+
+    // ดึงสถานะเกมปัจจุบัน
+    @GetMapping("/game-state")
+    public ResponseEntity<?> getGameState() {
+        return new ResponseEntity<>(getGameStateData(), HttpStatus.OK);
+    }
+
+    // Action: ซื้อ Tile
+    @PostMapping("/buy-tile")
+    public ResponseEntity<?> buyTile(@RequestBody ActionRequest request) {
+        String playerName = request.getPlayerId();
+        boolean success = MainGame.buyTile(playerName);
+        if(success) {
+            return new ResponseEntity<>(getGameStateData(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Not enough money to buy tile", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // Action: ซื้อ Minion
+    @PostMapping("/buy-minion")
+    public ResponseEntity<?> buyMinion(@RequestBody BuyMinionRequest request) {
+        String playerName = request.getPlayerId();
+        boolean success = MainGame.buyMinion(playerName, request.getName(), request.getColor(), request.getCost());
+        if(success) {
+            return new ResponseEntity<>(getGameStateData(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Not enough money to buy minion", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // Action: จบเทิร์น
+    @PostMapping("/end-turn")
+    public ResponseEntity<?> endTurn() {
+        MainGame.getInstance().endTurn();
+        return new ResponseEntity<>(getGameStateData(), HttpStatus.OK);
+    }
+
+    // ดึง action ของ Bot (ใช้ในโหมด Player vs Bot หรือ Bot vs Bot)
+    @GetMapping("/bot-move")
+    public ResponseEntity<?> botMove(@RequestParam String mode) {
+        String action = BotUtil.getBotAction(mode);
+        Map<String, String> response = new HashMap<>();
+        response.put("action", action);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // Utility method ดึงสถานะเกมเพื่อส่งกลับให้ frontend
+    private Object getGameStateData() {
+        Map<String, Object> state = new HashMap<>();
+        state.put("turn", MainGame.current_turn);
+        state.put("max_turns", MainGame.max_turns);
+        state.put("spawn_lefts", MainGame.spawn_lefts);
+        state.put("playerData", MainGame.getPlayerData());
+        state.put("currentPlayer", MainGame.current_player != null ? MainGame.current_player.getName() : "");
+        return state;
+    }
+
+    // --- DTO สำหรับ Request ---
+    public static class InitGameRequest {
+        private String mode;
+        private String player1;
+        private String player2;
+        public String getMode() { return mode; }
+        public void setMode(String mode) { this.mode = mode; }
+        public String getPlayer1() { return player1; }
+        public void setPlayer1(String player1) { this.player1 = player1; }
+        public String getPlayer2() { return player2; }
+        public void setPlayer2(String player2) { this.player2 = player2; }
+    }
+
+    public static class ActionRequest {
+        private String playerId;
+        public String getPlayerId() { return playerId; }
+        public void setPlayerId(String playerId) { this.playerId = playerId; }
+    }
+
+    public static class BuyMinionRequest {
+        private String playerId;
+        private String name;
+        private String color;
+        private int cost;
+        public String getPlayerId() { return playerId; }
+        public void setPlayerId(String playerId) { this.playerId = playerId; }
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getColor() { return color; }
+        public void setColor(String color) { this.color = color; }
+        public int getCost() { return cost; }
+        public void setCost(int cost) { this.cost = cost; }
+    }
+}

@@ -1,0 +1,67 @@
+1. MinionPage
+ส่งข้อมูล Minion ที่เลือกไปยัง Backend:
+หลังจากผู้เล่นกรอกข้อมูล minion (เช่น ชื่อ, ค่า defense, code) ควรส่งข้อมูลเหล่านี้ไปยัง backend โดยใช้ API (เช่น POST /api/players/{playerId}/minions)
+
+ตัวอย่าง: สร้างฟังก์ชัน submitMinions ที่เรียก axios.post พร้อม payload ของ minion ทั้งหมด
+ดึงข้อมูลสถานะเกมจาก Backend:
+หลังจากการส่งข้อมูล minion เสร็จแล้ว ให้ backend ส่งกลับข้อมูลล่าสุดของเกม (เช่น ข้อมูลผู้เล่น, รายการ minion ที่ซื้อแล้ว) จากนั้นให้เปลี่ยนเส้นทาง (router.push) ไปยังหน้าต่อไป
+
+Validation & Error Handling:
+ตรวจสอบข้อมูลที่กรอกและแสดงข้อความ error จาก response หากมีปัญหาในการบันทึกข้อมูล
+
+2. ModePage
+ตั้งค่าและส่งโหมดเกมไปยัง Backend:
+เมื่อผู้ใช้เลือกโหมดเกม (PVP, PVB, BVB) สามารถส่งข้อมูลนี้ไปยัง backendเพื่อให้ backend สร้าง session เกมใหม่และตั้งค่าเบื้องต้น
+
+ตัวอย่าง: ฟังก์ชัน selectMode ที่เรียก API เช่น POST /api/game/init พร้อม parameter โหมดเกม
+การนำทาง (Navigation):
+หลังจาก backend ยืนยันโหมดแล้ว ให้นำทางไปยังหน้าต่อไป (เช่น หน้า StartGame หรือ MinionPage) พร้อมกับข้อมูลที่จำเป็น (เช่น game session ID)
+
+3. page.tsx (Start Page)
+การเริ่มต้นเกม (Game Initialization):
+หน้าแรกที่ผู้ใช้คลิก “Play” ควรเรียก API เพื่อสร้าง session เกมใหม่หรือรีเซ็ตสถานะเกมบน backend
+
+ฟังก์ชันเช่น initializeGame ที่ส่ง request ไปยัง backend (อาจเป็น POST /api/game/start) แล้วรับ game state หรือ session id
+เชื่อมต่อกับ backend สำหรับการรีเฟรชสถานะ:
+คุณอาจเพิ่มฟังก์ชันสำหรับดึงข้อมูลสถานะเกมล่าสุดเมื่อต้องการ เช่น การ refresh หน้าเริ่มเกม
+
+4. Layout
+Global State หรือ Context Provider:
+ใน Layout คุณสามารถสร้าง Context เพื่อเก็บข้อมูล global เช่น game session id, ผู้เล่นที่ล็อกอิน หรือข้อมูลที่ได้จาก backend เมื่อมีการอัพเดท
+
+สามารถเพิ่ม Provider เพื่อให้ component อื่น ๆ ใช้งานร่วมกันได้
+Theme & Global Configurations:
+ส่วนนี้อาจไม่ต้องเปลี่ยนแปลงด้านการสื่อสารกับ backendโดยตรง แต่สามารถเพิ่มฟังก์ชันการรีเฟรชข้อมูล (refresh token หรือการตรวจสอบ session) ได้ในระดับ global
+
+5. BotMove
+ควบคุม Bot Action ผ่าน Backend:
+หากต้องการให้การตัดสินใจของ Bot อยู่ในฝั่ง backend (เพื่อให้เกมเป็นกลางมากขึ้น) ให้เปลี่ยนฟังก์ชันใน BotMove ให้เรียก API (เช่น GET /api/bot-move?mode=PVB) เพื่อรับ action จาก backend แทนการสุ่มในฝั่ง client
+
+ฟังก์ชัน: fetchBotAction ที่เรียก axios.get แล้วอัพเดท state ของ botAction
+ถ้าต้องการให้ Bot คิดเองที่ client:
+ก็สามารถเก็บฟังก์ชันสุ่มแบบเดิมไว้ แต่แนะนำให้ส่งผลลัพธ์ไปอัพเดทกับ backendเพื่อให้เกมมี state ที่สอดคล้องกัน
+
+6. GameBoard
+ดึงตำแหน่งและสถานะของ minion จาก Backend:
+เปลี่ยนจากการรับ minions จาก prop ที่ถูกส่งมาแบบ manual เป็นการดึงข้อมูลล่าสุดจาก backend (ผ่าน API เช่น GET /api/game-state หรือ GET /api/board)
+
+ฟังก์ชัน: refreshBoard ที่ดึงข้อมูลตำแหน่ง minionและ hex state แล้ว render ใหม่
+แสดงผลที่สอดคล้องกับสถานะเกมจริง:
+เมื่อมีการเปลี่ยนแปลง (เช่น หลังจาก endTurn หรือ deploy minion) ให้ GameBoard ร้องขอข้อมูลล่าสุดจาก backendเพื่อให้แสดงผลที่ถูกต้อง
+
+7. PlayerInfo
+แสดงข้อมูลผู้เล่นที่มาจาก Backend:
+ปรับให้รับข้อมูลผู้เล่น (เช่น เงิน, จำนวน minion) จาก response ของ API ที่ส่งกลับมาจาก backend
+
+ควรมีฟังก์ชันสำหรับการ refresh ข้อมูลผู้เล่นหลังจากการเปลี่ยนแปลงใด ๆ เช่น หลังจากซื้อ minion หรือ tile
+การอัพเดทข้อมูลอัตโนมัติ:
+เมื่อมีการเปลี่ยนแปลงในเกม (เช่น endTurn) ให้ PlayerInfo ดึงข้อมูลใหม่จาก backend หรือให้ GamePage ส่ง state ที่อัพเดทเข้ามา
+
+สรุปภาพรวม
+API Service: รวบรวมฟังก์ชันสำหรับการติดต่อกับ backend
+GamePage: โหลดสถานะเกมและเรียกใช้ action ต่าง ๆ (ซื้อ tile, ซื้อ minion, จบเทิร์น)
+MinionPage: รับข้อมูลการออกแบบมินเนี่ยนจากผู้เล่นแล้วส่งไปยัง backend
+ModeSelection & StartGamePage: จัดการการเลือกโหมดและตั้งค่าชื่อผู้เล่น พร้อมส่งข้อมูลไปเริ่มเกม
+BotMove, GameBoard, PlayerInfo: รับข้อมูลที่อัปเดตจาก backend แล้ว render ให้ผู้เล่นเห็นสถานะล่าสุดของเกม
+Layout: ตั้งค่า global CSS และการจัดการ layout ของแอป
+ด้วยโครงสร้างนี้ frontend ของคุณจะสามารถสื่อสารกับ backend ที่ปรับเป็น REST API ได้อย่างครบถ้วน คุณสามารถนำโค้ดตัวอย่างเหล่านี้ไปปรับใช้และทดสอบเพิ่มเติมได้เลยครับ

@@ -1,0 +1,58 @@
+Execution Engine
+File: src/main/java/strategy/MinionStrategyEngine.java
+หมายเหตุ:
+
+เพิ่มการใช้ Math.floor(...) เพื่อทำการ rounded down ค่าเป็น integer ตามเงื่อนไข
+Player.getTotalMinionHP() และ Player.getMinionCount() ควรถูก implement ในคลาส Player (ดูด้านล่าง)
+
+package strategy;
+
+import model.Minion;
+import model.Hex;
+import model.Player;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * ตัวอย่างของ engine ที่ใช้ parse และ execute strategy script ของมินเนี่ยน
+ * หมายเหตุ: โค้ดนี้เป็นตัวอย่างเบื้องต้น (pseudo-code)
+ * คุณสามารถพัฒนาให้รองรับ grammar และคำสั่งที่ซับซ้อนตามเงื่อนไขได้
+ */
+public class MinionStrategyEngine {
+    private List<String> actionLog = new ArrayList<>();
+
+    public List<String> getActionLog() {
+        return actionLog;
+    }
+
+    /**
+     * รับ string ที่เป็น script ของ minion แล้ว execute ทีละคำสั่ง
+     */
+    public void executeStrategy(Minion minion, Player player, Hex currentHex) {
+        String strategy = minion.getStrategy();
+        if (strategy == null || strategy.isEmpty()) {
+            return;
+        }
+        // แยกคำสั่งด้วยเครื่องหมาย semicolon (;) เป็นตัวอย่าง
+        String[] commands = strategy.split(";");
+        for (String cmd : commands) {
+            cmd = cmd.trim();
+            if (cmd.isEmpty()) continue;
+            // ตัวอย่างคำสั่ง "move", "shoot", "done"
+            if (cmd.equalsIgnoreCase("move")) {
+                actionLog.add(minion.getName() + " moves from hex (" + currentHex.row + "," + currentHex.col + ")");
+                // ลดงบของผู้เล่น 1 หน่วย (ตามเงื่อนไข)
+                player.setBudget(Math.floor(player.getBudget() - 1));
+                // อัปเดทตำแหน่งของ minion (ในตัวอย่างนี้ไม่ระบุรายละเอียด)
+            } else if (cmd.equalsIgnoreCase("shoot")) {
+                actionLog.add(minion.getName() + " executes shoot command.");
+                // ตี target ตามเงื่อนไข (การคำนวณ damage ฯลฯ)
+            } else if (cmd.equalsIgnoreCase("done")) {
+                actionLog.add(minion.getName() + " ends its strategy.");
+                break;
+            } else {
+                actionLog.add("Unknown command: " + cmd);
+            }
+        }
+    }
+}

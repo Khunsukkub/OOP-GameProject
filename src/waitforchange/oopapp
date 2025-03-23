@@ -1,0 +1,12 @@
+ไฟล์นี้เป็น entry point ของ Spring Boot แอปพลิเคชัน
+package com.example.oopprojectnew2;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class OopProjectNew2Application {
+    public static void main(String[] args) {
+        SpringApplication.run(OopProjectNew2Application.class, args);
+    }
+}

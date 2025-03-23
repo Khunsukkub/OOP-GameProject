@@ -1,0 +1,74 @@
+File: components/GameBoard.tsx
+ดึงข้อมูลกระดานและตำแหน่งมินเนี่ยนจาก backend แล้ว render แบบ dynamic
+"use client";
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./game-board.css";
+
+interface Minion {
+  id: number;
+  name: string;
+  color: string;
+  position: { q: number; r: number };
+}
+
+const GameBoard: React.FC = () => {
+  const [minions, setMinions] = useState<Minion[]>([]);
+
+  useEffect(() => {
+    fetchBoardData();
+  }, []);
+
+  const fetchBoardData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/board");
+      // สมมติว่า backend ส่งข้อมูลในรูปแบบ { board: [...], minions: [...] }
+      setMinions(response.data.minions);
+      createHexGrid(response.data.minions);
+    } catch (error) {
+      console.error("Error fetching board data:", error);
+    }
+  };
+
+  const createHexGrid = (minionsData: Minion[]) => {
+    const grid = document.getElementById("gameBoard");
+    if (!grid) return;
+    grid.innerHTML = "";
+    const rows = 8;
+    const cols = 8;
+    const size = 30;
+    for (let r = 0; r < rows; r++) {
+      for (let q = 0; q < cols; q++) {
+        const x = size * 1.5 * q;
+        const y = size * Math.sqrt(3) * (r - 0.5 * (q % 2));
+        const hex = document.createElement("div");
+        hex.className = "hex";
+        hex.style.transform = `translate(${x}px, ${y}px)`;
+        grid.appendChild(hex);
+      }
+    }
+    minionsData.forEach((minion) => {
+      placeMinion(minion);
+    });
+  };
+
+  const placeMinion = (minion: Minion) => {
+    const grid = document.getElementById("gameBoard");
+    if (!grid) return;
+    const size = 30;
+    const { q, r } = minion.position;
+    const x = size * 1.5 * q;
+    const y = size * Math.sqrt(3) * (r - 0.5 * (q % 2));
+    const minionElement = document.createElement("div");
+    minionElement.className = "minion";
+    minionElement.style.backgroundColor = minion.color;
+    minionElement.style.transform = `translate(${x}px, ${y}px)`;
+    minionElement.innerText = minion.name[0];
+    grid.appendChild(minionElement);
+  };
+
+  return <div className="hex-grid" id="gameBoard"></div>;
+};
+
+export default GameBoard;

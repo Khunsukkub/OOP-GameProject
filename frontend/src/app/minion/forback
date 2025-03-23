@@ -1,0 +1,27 @@
+const express = require("express");
+const router = express.Router();
+
+let minions = []; // Mock Database
+
+// ✅ API สำหรับสร้าง Minion
+router.post("/minions", (req, res) => {
+    const { playerId, minions: minionList } = req.body;
+
+    if (!playerId || !minionList) {
+        return res.status(400).json({ error: "Missing playerId or minions" });
+    }
+
+    // เพิ่ม Minion ลงใน Database
+    minionList.forEach((minion) => {
+        minions.push({ ...minion, playerId });
+    });
+
+    res.json({ success: true, minions });
+});
+
+module.exports = router;
+
+
+
+file backend/routes/minionRoutes.js
+ Minion ที่เลือกจะถูกบันทึกลง Database โดยอัตโนมัติ 🎮

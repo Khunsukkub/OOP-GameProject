@@ -1,0 +1,25 @@
+ขยาย API Endpoint ให้รองรับข้อมูลเพิ่มเติม
+// Endpoint สำหรับส่ง action log ของ minion strategy
+@GetMapping("/action-log")
+public ResponseEntity<?> getActionLog() {
+    return new ResponseEntity<>(MainGame.getActionLog(), HttpStatus.OK);
+}
+
+// Endpoint สำหรับดึงรายละเอียดกระดาน (hex และ minion ในแต่ละ hex)
+@GetMapping("/board")
+public ResponseEntity<?> getBoard() {
+    Map<String, Object> boardState = MapUtil.getBoardState();
+    return new ResponseEntity<>(boardState, HttpStatus.OK);
+}
+
+น MapUtil.java เพิ่ม method getBoardState()
+
+public Map<String, Object> getBoardState() {
+    Map<String, Object> boardData = new HashMap<>();
+    // ตัวอย่าง: ส่งข้อมูล hex ทั้งหมดในรูปแบบ 2D array
+    boardData.put("board", board);
+    return boardData;
+}
+
+ตรวจสอบเงื่อนไขการซื้อ Hex และ Spawn Minion
+MapUtil

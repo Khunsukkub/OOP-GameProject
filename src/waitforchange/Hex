@@ -1,0 +1,48 @@
+แทนแต่ละช่องในกระดานเกม
+package model;
+
+public class Hex {
+    private int playerNumber;
+    private boolean ownerState = false;
+    private Minion minion;
+    private boolean minionState = false;
+    public int row;
+    public int col;
+    private double hexPrice = 1000;
+
+    public static int totalInRow = 8;
+    public static int totalInCol = 8;
+    public static int total = totalInRow * totalInCol;
+
+    public Hex(int row, int col) {
+        this.row = row;
+        this.col = col;
+    }
+
+    public boolean isOwner() {
+        return ownerState;
+    }
+
+    public int getOwner() {
+        return playerNumber;
+    }
+
+    public void setOwner(Player player) {
+        // กำหนดเจ้าของให้กับช่องนี้ (อาจใช้ player number หากต้องการ)
+        playerNumber = 1;
+        ownerState = true;
+    }
+
+    public void setMinion(Minion minion) {
+        minionState = true;
+        this.minion = minion;
+    }
+
+    public boolean hasMinion() {
+        return minionState;
+    }
+
+    public double getHexPrice() {
+        return hexPrice;
+    }
+}

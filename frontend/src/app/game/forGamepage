@@ -1,0 +1,103 @@
+File: pages/GamePage.tsx
+ในหน้านี้ เราจะโหลดสถานะเกมจาก backend และเรียกใช้ฟังก์ชันต่าง ๆ จาก API Service
+"use client";
+
+import React, { useState, useEffect } from "react";
+import GameBoard from "@/components/GameBoard";
+import PlayerInfo from "@/components/PlayerInfo";
+import MinionShop from "@/components/MinionShop";
+import {
+  getGameState,
+  buyTile as apiBuyTile,
+  buyMinion as apiBuyMinion,
+  endTurn as apiEndTurn,
+} from "@/services/gameService";
+import "./game.css";
+
+const GamePage: React.FC = () => {
+  const [gameState, setGameState] = useState<any>({
+    turn: 1,
+    currentPlayer: "Player 1",
+    playerData: {
+      "Player 1": { money: 100, minions: [] },
+      "Player 2": { money: 100, minions: [] },
+    },
+  });
+  const { turn, currentPlayer, playerData } = gameState;
+  const [showShop, setShowShop] = useState<boolean>(false);
+
+  useEffect(() => {
+    fetchGameState();
+  }, []);
+
+  const fetchGameState = async () => {
+    try {
+      const state = await getGameState();
+      setGameState(state);
+    } catch (error) {
+      console.error("Error fetching game state:", error);
+    }
+  };
+
+  const handleBuyTile = async () => {
+    try {
+      const updatedState = await apiBuyTile(currentPlayer);
+      setGameState(updatedState);
+      alert(`${currentPlayer} bought a tile!`);
+    } catch (error) {
+      alert(`${currentPlayer} doesn't have enough money to buy a tile!`);
+    }
+  };
+
+  const handleBuyMinion = async (name: string, color: string, cost: number) => {
+    try {
+      const updatedState = await apiBuyMinion(currentPlayer, { name, color, cost });
+      setGameState(updatedState);
+      alert(`${currentPlayer} bought a ${name} minion!`);
+      setShowShop(false);
+    } catch (error) {
+      alert(`${currentPlayer} doesn't have enough money to buy ${name}!`);
+    }
+  };
+
+  const handleEndTurn = async () => {
+    try {
+      const updatedState = await apiEndTurn();
+      setGameState(updatedState);
+    } catch (error) {
+      console.error("Error ending turn:", error);
+    }
+  };
+
+  return (
+    <div className="game-container">
+      <h1>🎮 KOMBAT Game</h1>
+      <h2>Turn: {turn}</h2>
+      <h3>Current Player: {currentPlayer}</h3>
+
+      <PlayerInfo playerData={playerData} />
+
+      <div className="top-buttons">
+        <button onClick={handleBuyTile}>Buy Tile 🏠</button>
+        <button onClick={() => setShowShop(true)}>Buy Minion 🤖</button>
+      </div>
+
+      <div className="game-content">
+        <GameBoard />
+        {showShop && (
+          <MinionShop
+            minionList={playerData[currentPlayer].minions}
+            onClose={() => setShowShop(false)}
+            onBuyMinion={handleBuyMinion}
+          />
+        )}
+      </div>
+
+      <button className="end-turn" onClick={handleEndTurn}>
+        End Turn 🔄
+      </button>
+    </div>
+  );
+};
+
+export default GamePage;

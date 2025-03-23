@@ -1,0 +1,98 @@
+ปรับปรุงให้มีเมธอดสำหรับ action ต่าง ๆ ที่ใช้โดย Controller และส่งข้อมูลสถานะกลับ
+package model;
+
+import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
+
+public class MainGame {
+    private static MainGame instance;
+    public static int current_turn = 1;
+    public static int max_turns = 69;
+    public static double init_budget = 10000;
+    public static int max_spawns = 47;
+    public static int spawn_lefts = max_spawns;
+    public static Minion[] minionList;
+    public static Player current_player;
+    public static Player opponent_player;
+
+    static Random rand = new Random();
+
+    public static MainGame getInstance() {
+        if (instance == null) {
+            instance = new MainGame();
+        }
+        return instance;
+    }
+
+    // เริ่มต้นเกมด้วยการกำหนดผู้เล่นและตั้งค่าเริ่มต้น
+    public static void GameSetting(Player player1, Player player2) {
+        // กำหนด minionList เริ่มต้น (อาจจะมาจาก MinionSetting ในอนาคต)
+        minionList = new Minion[0];
+        getFirstPlayer(player1, player2);
+        MapUtil.setDefaultMap();
+    }
+
+    public static void getFirstPlayer(Player player1, Player player2) {
+        int numberOfCurrentPlayer = rand.nextInt(2) + 1;
+        current_player = (numberOfCurrentPlayer == 1) ? player1 : player2;
+        opponent_player = (current_player == player1) ? player2 : player1;
+    }
+
+    // Action: ซื้อ tile สำหรับผู้เล่น
+    public static boolean buyTile(String playerName) {
+        Player player = getPlayerByName(playerName);
+        if (player != null && player.getBudget() >= 20) {
+            player.setBudget(player.getBudget() - 20);
+            // อัพเดทข้อมูลเพิ่มเติมเกี่ยวกับ tile ถ้าจำเป็น
+            return true;
+        }
+        return false;
+    }
+
+    // Action: ซื้อ minion สำหรับผู้เล่น
+    public static boolean buyMinion(String playerName, String name, String color, int cost) {
+        Player player = getPlayerByName(playerName);
+        if (player != null && player.getBudget() >= cost) {
+            player.setBudget(player.getBudget() - cost);
+            // สร้าง minion ด้วยค่าพารามิเตอร์ที่รับเข้ามา (ใช้ค่าเริ่มต้นบางอย่างสำหรับ HP, defense, strategy)
+            Minion minion = new Minion(name, 100, 1.0, cost, "default");
+            player.addMinion(minion);
+            return true;
+        }
+        return false;
+    }
+
+    // จบเทิร์นโดยการเพิ่มรายได้และสลับผู้เล่น
+    public void endTurn() {
+        double income = Interest.pct(current_player.getBudget(), current_turn);
+        current_player.setBudget(current_player.getBudget() + income);
+        current_turn++;
+        // สลับผู้เล่น
+        Player temp = current_player;
+        current_player = opponent_player;
+        opponent_player = temp;
+    }
+
+    // ดึงผู้เล่นตามชื่อ
+    public static Player getPlayerByName(String name) {
+        for (Player p : MapUtil.getPlayers()) {
+            if (p.getName().equalsIgnoreCase(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    // ดึงข้อมูลผู้เล่นในรูปแบบ Map สำหรับส่งกลับไปยัง frontend
+    public static Map<String, Object> getPlayerData() {
+        Map<String, Object> data = new HashMap<>();
+        for (Player p : MapUtil.getPlayers()) {
+            Map<String, Object> pData = new HashMap<>();
+            pData.put("money", p.getBudget());
+            pData.put("minions", p.getMinions());
+            data.put(p.getName(), pData);
+        }
+        return data;
+    }
+}

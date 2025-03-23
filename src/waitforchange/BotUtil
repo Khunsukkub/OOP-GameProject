@@ -1,0 +1,12 @@
+ช่วยสร้าง action แบบสุ่มสำหรับ Bot
+package model;
+
+import java.util.Random;
+
+public class BotUtil {
+    public static String getBotAction(String mode) {
+        String[] actions = {"Attack", "Defend", "Move"};
+        Random rand = new Random();
+        return actions[rand.nextInt(actions.length)];
+    }
+}

@@ -1,0 +1,40 @@
+File: components/BotMove.tsx
+ในส่วนนี้เราจะเรียก API เพื่อรับ action จาก bot แทนการสุ่มใน client
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { getBotMove } from "@/services/gameService";
+
+interface BotMoveProps {
+  mode: "PVB" | "BVB" | "PVP";
+}
+
+const BotMove: React.FC<BotMoveProps> = ({ mode }) => {
+  const [botAction, setBotAction] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchBotAction = async () => {
+      if (mode === "PVB" || mode === "BVB") {
+        try {
+          const data = await getBotMove(mode);
+          setBotAction(data.action);
+        } catch (error) {
+          console.error("Error fetching bot action:", error);
+        }
+      }
+    };
+    fetchBotAction();
+  }, [mode]);
+
+  return (
+    <div className="bot-container">
+      {botAction && (
+        <p>
+          🤖 Bot chose to: <strong>{botAction}</strong>
+        </p>
+      )}
+    </div>
+  );
+};
+
+export default BotMove;

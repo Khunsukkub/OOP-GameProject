@@ -4,75 +4,65 @@ import React, { useState, useEffect } from "react";
 import GameBoard from "@/components/GameBoard";
 import PlayerInfo from "@/components/PlayerInfo";
 import MinionShop from "@/components/MinionShop";
+import { getGameState, buyTile, buyMinion, endTurn } from "@/services/GameService";
 import "./game.css";
 
 const GamePage: React.FC = () => {
-    const [turn, setTurn] = useState<number>(1);
-    const [currentPlayer, setCurrentPlayer] = useState<string>("Player 1");
+    const [gameState, setGameState] = useState<{
+        turn: number;
+        currentPlayer: string;
+        playerData: Record<string, { money: number; minions: { name: string; color: string; cost: number }[] }>;
+    }>({
+        turn: 1,
+        currentPlayer: "Player 1",
+        playerData: {
+            "Player 1": { money: 100, minions: [] },
+            "Player 2": { money: 100, minions: [] },
+        },
+    });
+    const { turn, currentPlayer, playerData } = gameState;
     const [showShop, setShowShop] = useState<boolean>(false);
 
-    // **ข้อมูลมินเนี่ยนของผู้เล่น**
-    const [playerData, setPlayerData] = useState<Record<string, {
-        money: number;
-        minions: { name: string; color: string; cost: number }[];
-    }>>({
-        "Player 1": { money: 100, minions: [] },
-        "Player 2": { money: 100, minions: [] },
-    });
-
+    // เมื่อ component ถูก mount, เรียก API เพื่อดึงสถานะเกมล่าสุดจาก backend
     useEffect(() => {
-        // โหลด Minion ของผู้เล่น 1 และ 2 จาก localStorage
-        const minionsP1 = localStorage.getItem("selectedMinions-1");
-        const minionsP2 = localStorage.getItem("selectedMinions-2");
-
-        setPlayerData({
-            "Player 1": { money: 100, minions: minionsP1 ? JSON.parse(minionsP1) : [] },
-            "Player 2": { money: 100, minions: minionsP2 ? JSON.parse(minionsP2) : [] },
-        });
+        async function fetchGameState() {
+            try {
+                const state = await getGameState();
+                setGameState(state);
+            } catch (error) {
+                console.error("Error fetching game state:", error);
+            }
+        }
+        fetchGameState();
     }, []);
 
-    const endTurn = () => {
-        setTurn(turn + 1);
-        setCurrentPlayer((prev) => (prev === "Player 1" ? "Player 2" : "Player 1"));
-    };
-
-    const buyTile = () => {
-        if (playerData[currentPlayer].money >= 20) {
-            setPlayerData((prev) => ({
-                ...prev,
-                [currentPlayer]: {
-                    ...prev[currentPlayer],
-                    money: prev[currentPlayer].money - 20,
-                },
-            }));
+    const handleBuyTile = async () => {
+        try {
+            const updatedState = await buyTile(currentPlayer);
+            setGameState(updatedState);
             alert(`${currentPlayer} bought a tile!`);
-        } else {
+        } catch (error) {
             alert(`${currentPlayer} doesn't have enough money to buy a tile!`);
         }
     };
 
-    const openMinionShop = () => {
-        setShowShop(true);
-    };
-
-    const closeMinionShop = () => {
-        setShowShop(false);
-    };
-
-    const buyMinion = (name: string, color: string, cost: number) => {
-        if (playerData[currentPlayer].money >= cost) {
-            setPlayerData((prev) => ({
-                ...prev,
-                [currentPlayer]: {
-                    ...prev[currentPlayer],
-                    money: prev[currentPlayer].money - cost,
-                    minions: [...prev[currentPlayer].minions, { name, color, cost }],
-                },
-            }));
+    const handleBuyMinion = async (name: string, color: string, cost: number) => {
+        try {
+            const updatedState = await buyMinion(currentPlayer, { name, color, cost });
+            setGameState(updatedState);
             alert(`${currentPlayer} bought a ${name} minion!`);
             setShowShop(false);
-        } else {
+        } catch (error) {
             alert(`${currentPlayer} doesn't have enough money to buy ${name}!`);
+        }
+    };
+
+    const handleEndTurn = async () => {
+        try {
+            const updatedState = await endTurn();
+            setGameState(updatedState);
+        } catch (error) {
+            console.error("Error ending turn:", error);
         }
     };
 
@@ -85,8 +75,8 @@ const GamePage: React.FC = () => {
             <PlayerInfo playerData={playerData} />
 
             <div className="top-buttons">
-                <button onClick={buyTile}>Buy Tile 🏠</button>
-                <button onClick={openMinionShop}>Buy Minion 🤖</button>
+                <button onClick={handleBuyTile}>Buy Tile 🏠</button>
+                <button onClick={() => setShowShop(true)}>Buy Minion 🤖</button>
             </div>
 
             <div className="game-content">
@@ -95,13 +85,13 @@ const GamePage: React.FC = () => {
                 {showShop && (
                     <MinionShop
                         minionList={playerData[currentPlayer].minions}
-                        onClose={closeMinionShop}
-                        onBuyMinion={buyMinion}
+                        onClose={() => setShowShop(false)}
+                        onBuyMinion={handleBuyMinion}
                     />
                 )}
             </div>
 
-            <button className="end-turn" onClick={endTurn}>
+            <button className="end-turn" onClick={handleEndTurn}>
                 End Turn 🔄
             </button>
         </div>

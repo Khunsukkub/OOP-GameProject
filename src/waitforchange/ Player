@@ -1,0 +1,39 @@
+เก็บข้อมูลของผู้เล่น รวมทั้งชื่อ งบประมาณ และรายการมินเนี่ยนที่ซื้อ
+package model;
+
+public class Player {
+    private String name;
+    private double budget;
+    private Minion[] ownMinion = new Minion[MainGame.max_spawns];
+    private int minionCount = 0;
+
+    public Player(String name, double budget, int playerNumber) {
+        this.name = name;
+        this.budget = budget;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getBudget() {
+        return budget;
+    }
+
+    public void setBudget(double budget) {
+        this.budget = budget;
+    }
+
+    public void addMinion(Minion minion) {
+        ownMinion[minionCount] = minion;
+        minionCount++;
+    }
+
+    public Minion[] getMinions() {
+        Minion[] result = new Minion[minionCount];
+        for (int i = 0; i < minionCount; i++) {
+            result[i] = ownMinion[i];
+        }
+        return result;
+    }
+}

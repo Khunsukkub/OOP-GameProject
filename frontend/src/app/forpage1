@@ -1,0 +1,31 @@
+File: pages/page.tsx
+หน้าแรกให้ผู้เล่นเลือกที่จะเริ่มเล่นหรือออกจากเกม
+"use client";
+
+import React from "react";
+import { useRouter } from "next/navigation";
+import "./page.css";
+
+const StartPage: React.FC = () => {
+  const router = useRouter();
+
+  const startGame = () => {
+    router.push("/mode");
+  };
+
+  const exitGame = () => {
+    if (typeof window !== "undefined") {
+      window.close();
+    }
+  };
+
+  return (
+    <div className="container">
+      <h1>K.O.M.B.A.T</h1>
+      <button onClick={startGame}>Play 🎮</button>
+      <button onClick={exitGame}>Exit 🎮</button>
+    </div>
+  );
+};
+
+export default StartPage;

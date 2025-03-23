@@ -1,0 +1,98 @@
+1. Controller
+บทบาทใน Backend:
+
+ทำหน้าที่ควบคุมการทำงานหลักของเกม (game loop) รับ input และสั่งให้ดำเนินการต่าง ๆ เช่น ซื้อมินเนี่ยน ซื้อ hex และ deploy มินเนี่ยน
+ปัจจุบันออกแบบมาเพื่อรับข้อมูลจาก console แต่เมื่อเปลี่ยนเป็น REST API จะต้องแยก endpoint ให้แต่ละ action
+เชื่อมโยงกับ Frontend:
+
+API Endpoints: เมื่อ frontend เรียก API (เช่น /api/buy-minion, /api/buy-tile, /api/end-turn) Controller จะเป็นตัวจัดการ logic เพื่อนำข้อมูลจาก frontend ไปประมวลผลใน MainGame และส่งสถานะเกมกลับไป
+การอัพเดทสถานะเกม: Controller จะเรียก method ใน MainGame เพื่อปรับปรุงสถานะ (เช่น เปลี่ยนเทิร์น, อัพเดท budget ของผู้เล่น) ซึ่งข้อมูลเหล่านี้จะถูกส่งกลับไปให้ frontend แสดงผลในหน้า GamePage และ PlayerInfo
+2. Hex
+บทบาทใน Backend:
+
+แทนแต่ละช่องในกระดานเกม (hex grid) มีข้อมูลเกี่ยวกับเจ้าของช่อง (owner), มินเนี่ยนที่ deploy อยู่, ราคา ฯลฯ
+เชื่อมโยงกับ Frontend:
+
+GameBoard: Frontend ส่วน GameBoard ใช้ข้อมูล hex จาก backend (ผ่าน Map ที่จัดการ hex ทั้งหมด) เพื่อแสดงกริดของเกมและตำแหน่งของมินเนี่ยน
+สถานะของช่อง: ข้อมูลใน Hex (เช่น ว่าช่องไหนมีมินเนี่ยนหรือเป็นของผู้เล่นคนไหน) จะช่วยให้ GameBoard render ให้ตรงกับสถานะจริงของเกม
+3. Interest
+บทบาทใน Backend:
+
+คำนวณดอกเบี้ยหรือรายได้เพิ่มเติมของผู้เล่นในแต่ละเทิร์นตาม budget และ turn number
+เชื่อมโยงกับ Frontend:
+
+สถานะเงินของผู้เล่น: เมื่อจบเทิร์น (endTurn) MainGame จะเรียก Interest เพื่อคำนวณรายได้ให้ผู้เล่น จากนั้นผลลัพธ์ (budget ที่อัพเดท) จะถูกส่งกลับไปให้ frontend (PlayerInfo) แสดงผล
+4. MainGame
+บทบาทใน Backend:
+
+ควบคุมสถานะหลักของเกม เช่น turn, รายการมินเนี่ยนที่ออกแบบไว้, ข้อมูลผู้เล่น (Player) และการจัดการสภาวะต่าง ๆ ของเกม
+มีเมธอดสำหรับการเริ่มเกม (GameSetting), สลับผู้เล่น, จบเทิร์น และอัพเดทสถานะเกม
+เชื่อมโยงกับ Frontend:
+
+Game State API: API ที่ frontend เรียก (เช่น /api/game-state, /api/end-turn) จะดึงข้อมูลจาก MainGame เพื่อให้ frontend ได้รับสถานะเกมที่อัพเดทอยู่เสมอ
+Action Handling: เมื่อตัวเลือกเช่น ซื้อ tile หรือมินเนี่ยนถูกเรียกใช้ Controller MainGame จะปรับปรุงข้อมูลผู้เล่นและ game state แล้วส่งกลับไปให้ frontend
+5. Map
+บทบาทใน Backend:
+
+จัดการโครงสร้างของกระดานเกม (hex grid) รวมถึงการกำหนดพื้นที่เริ่มต้นของผู้เล่นและการอัพเดทสถานะของช่อง (Hex) ในกระดาน
+เชื่อมโยงกับ Frontend:
+
+GameBoard Data: ข้อมูลกระดานเกมที่ Map สร้างขึ้น (เช่น รายละเอียด Hex แต่ละช่อง) จะถูกส่งออกมาให้ GameBoard render เป็นกริด
+การซื้อ Hex: เมื่อผู้เล่นซื้อช่องในเกม Map จะอัพเดทข้อมูล owner ของ Hex นั้น ซึ่งผลลัพธ์นี้จะสังเกตได้ใน GameBoard และ PlayerInfo (แสดงพื้นที่ที่ผู้เล่นครอบครอง)
+6. Minion
+บทบาทใน Backend:
+
+แทนข้อมูลของมินเนี่ยนแต่ละตัว เช่น ชื่อ, HP, ค่า defense, spawn cost, และ strategy
+เป็นองค์ประกอบหลักของผู้เล่นในเกม
+เชื่อมโยงกับ Frontend:
+
+MinionPage & PlayerInfo: ข้อมูลของมินเนี่ยนที่ผู้เล่นเลือกหรือซื้อจะถูกสร้างขึ้นโดยใช้คลาส Minion ซึ่งข้อมูลเหล่านี้จะถูกส่งไปแสดงในหน้าต่างๆ เช่น PlayerInfo (แสดงจำนวนมินเนี่ยนและรายละเอียด) และใน MinionShop (ให้ผู้เล่นเลือกซื้อ)
+Deploy บนกระดาน: เมื่อนำมินเนี่ยนมา deploy บนกระดาน ข้อมูลตำแหน่งของมินเนี่ยน (จาก Minion) จะถูกส่งไปให้ GameBoard render
+7. MinionChoosing
+บทบาทใน Backend:
+
+รับค่าจำนวนมินเนี่ยนที่ผู้เล่นต้องการเลือก (ปัจจุบันใช้ Scanner รับ input จาก console)
+ในระบบ API จะเปลี่ยนเป็นรับข้อมูลผ่าน request payload จาก frontend
+เชื่อมโยงกับ Frontend:
+
+MinionPage: ข้อมูลจำนวนมินเนี่ยนที่ผู้เล่นเลือก (เช่น 1-5) ซึ่งใน frontend MinionPage จะให้ผู้เล่นเลือกจำนวนแล้วส่งไปยัง backend (โดยอาจผนวก logic จาก MinionChoosing เพื่อ validate จำนวนที่เลือก)
+8. MinionSetting
+บทบาทใน Backend:
+
+กำหนดลักษณะของมินเนี่ยน เช่น ชื่อ, HP เริ่มต้น, defense factor, spawn cost และ strategy ผ่านการรับ input จากผู้เล่น
+ใช้ร่วมกับ MinionChoosing เพื่อสร้างออบเจกต์ Minion ที่พร้อมใช้งานในเกม
+เชื่อมโยงกับ Frontend:
+
+MinionPage: ส่วนนี้ใน frontend ให้ผู้เล่นป้อนข้อมูลสำหรับแต่ละมินเนี่ยน (ชื่อ, ค่า defense, code) ซึ่งข้อมูลนี้จะถูกส่งไปยัง backend แล้วใช้ logic ของ MinionSetting เพื่อสร้างและ validate มินเนี่ยนก่อนบันทึกลง game state
+9. Player
+บทบาทใน Backend:
+
+แทนข้อมูลของผู้เล่นแต่ละคน เช่น ชื่อ, budget, ช่อง (Hex) ที่ครอบครอง และมินเนี่ยนที่ซื้อมา
+มีเมธอดสำหรับเพิ่มมินเนี่ยนและ hex ให้กับผู้เล่น
+เชื่อมโยงกับ Frontend:
+
+StartGamePage & PlayerInfo: ข้อมูลของผู้เล่นที่ถูกสร้างขึ้น (เช่น ชื่อ, budget) จะถูกส่งไปให้ frontend เพื่อแสดงในหน้าเริ่มเกมและใน PlayerInfo
+Action Updates: เมื่อผู้เล่นซื้อ tile หรือมินเนี่ยนในเกม Controller และ MainGame จะอัพเดทข้อมูลในออบเจกต์ Player จากนั้นผลลัพธ์ (budget, รายการมินเนี่ยน) จะส่งไปให้ frontend เพื่อ render สถานะล่าสุด
+สรุปภาพรวมของการเชื่อมโยง Backend กับ Frontend
+API Endpoint (Controller/MainGame):
+
+จะเป็นตัวเชื่อมหลักที่รับคำสั่งจาก frontend (ซื้อ, deploy, จบเทิร์น) แล้วปรับปรุงสถานะของเกมโดยใช้ข้อมูลจาก MainGame, Map, Player, Minion เป็นต้น
+ส่งกลับข้อมูลสถานะเกม (game state) ให้ frontend เช่น ใน GamePage, PlayerInfo, GameBoard
+ข้อมูลกระดานและมินเนี่ยน (Map, Hex, Minion):
+
+ใช้ในการกำหนดและแสดงผลกระดาน (GameBoard) และรายการมินเนี่ยนของผู้เล่น (PlayerInfo, MinionShop)
+ข้อมูลเหล่านี้จะถูกดึงมาจาก backend ผ่าน API endpoint เช่น /api/board หรือ /api/game-state
+การตั้งค่าและเลือกมินเนี่ยน (MinionChoosing, MinionSetting):
+
+รับข้อมูลจาก frontend (MinionPage) เพื่อกำหนดรายละเอียดของมินเนี่ยนและจำนวนที่ผู้เล่นเลือก
+หลังจากนั้น backend จะสร้างออบเจกต์ Minion และเพิ่มลงในสถานะผู้เล่น (Player) โดย MainGame ควบคุมกระบวนการนี้
+การคำนวณและอัพเดทสถานะ (Interest, MainGame):
+
+คำนวณรายได้และอัพเดทสถานะเมื่อจบเทิร์น จากนั้นข้อมูลเหล่านี้จะถูกส่งกลับให้ frontend เพื่อแสดงผลใน PlayerInfo และ GamePage
+
+สรุปภาพรวมการเชื่อมโยง
+GameController รับ request จาก frontend แล้วเรียกใช้เมธอดใน MainGame (รวมถึงการซื้อ tile, ซื้อ minion, จบเทิร์น)
+MainGame จัดการ state ของเกมโดยใช้ข้อมูลจาก Player, Minion, MapUtil และคำนวณรายได้ผ่าน Interest
+MapUtil จัดการข้อมูลกระดาน (Hex) และพื้นที่เริ่มต้นของผู้เล่น
+ส่วนอื่น ๆ เช่น MinionSetting, MinionChoosing ถูกใช้เพื่อแปลงข้อมูลที่ได้รับจาก frontend ให้กลายเป็นออบเจกต์ของเกม
+ด้วยโค้ดที่ปรับปรุงนี้ backend ของคุณจะสามารถรับคำสั่งผ่าน REST API และส่งสถานะเกมกลับไปให้ frontend ได้อย่างราบรื่น คุณสามารถนำโค้ดตัวอย่างนี้ไปพัฒนาและปรับแต่งให้ตรงกับความต้องการของโปรเจกต์ได้ตามต้องการ

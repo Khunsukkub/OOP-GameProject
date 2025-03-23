@@ -1,0 +1,25 @@
+ ตรวจสอบเงื่อนไขการซื้อ Hex และ Spawn Minion
+ ควรปรับปรุงในคลาส Player ให้มี method getPlayerId() หรือเก็บหมายเลขผู้เล่นให้ชัดเจน
+ ในการ spawn มินเนี่ยน ให้ตรวจสอบว่า spawn ได้แค่หนึ่งครั้งต่อเทิร์น และ update ค่า spawnRemaining (หรือ spawnsRemaining) ตามที่ระบุ
+
+ public static boolean canBeBoughtByPlayer(Hex hex, Player player) {
+     if (hex.isOwner()) {
+         return false; // ช่องนี้มีเจ้าของแล้ว
+     }
+     // ตรวจสอบว่า hex นี้อยู่ติดกับ hex ที่ผู้เล่นเป็นเจ้าของ
+     int[][] directions = {
+         {-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, 1}, {1, -1}
+     };
+     MapUtil util = getInstance();
+     for (int[] dir : directions) {
+         int newRow = hex.row + dir[0];
+         int newCol = hex.col + dir[1];
+         if (newRow >= 0 && newRow < util.board.length && newCol >= 0 && newCol < util.board[0].length) {
+             Hex neighbor = util.board[newRow][newCol];
+             if (neighbor.isOwner() && neighbor.getOwner() == player.getPlayerId()) {
+                 return true;
+             }
+         }
+     }
+     return false;
+ }

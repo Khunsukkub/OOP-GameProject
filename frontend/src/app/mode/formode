@@ -1,0 +1,38 @@
+File: pages/ModeSelection.tsx
+เมื่อเลือกโหมดแล้วจะเรียก API เพื่อเริ่มต้นเกมและนำทางไปยังหน้าต่อไป
+"use client";
+
+import React from "react";
+import { useRouter } from "next/navigation";
+import { initGame } from "@/services/gameService";
+import "./mode.css";
+
+const ModeSelection: React.FC = () => {
+  const router = useRouter();
+
+  const selectMode = async (mode: string) => {
+    try {
+      // เรียก API เพื่อเริ่มเกม โดยตอนนี้อาจจะส่งชื่อผู้เล่นเป็นค่าว่างก่อน
+      await initGame(mode, "", "");
+      router.push(`/start-game?mode=${mode}`);
+    } catch (error) {
+      alert("Error initializing game mode. Please try again.");
+    }
+  };
+
+  return (
+    <div className="container">
+      <h1>Select Mode</h1>
+      <div className="mode-buttons">
+        <button onClick={() => selectMode("PVP")}>🎮 PLAYER VS PLAYER 🎮</button>
+        <button onClick={() => selectMode("PVB")}>🎮 PLAYER VS BOT 🤖</button>
+        <button onClick={() => selectMode("BVB")}>🤖 BOT VS BOT 🤖</button>
+      </div>
+      <button className="back-button" onClick={() => router.push("/")}>
+        Back ⬅️
+      </button>
+    </div>
+  );
+};
+
+export default ModeSelection;

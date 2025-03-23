@@ -1,0 +1,64 @@
+คลาสนี้รับผิดชอบเกี่ยวกับการสร้างกระดาน (hex grid) และตั้งค่าพื้นที่เริ่มต้นของผู้เล่น
+package model;
+
+public class MapUtil {
+    private static MapUtil instance;
+    private Hex[][] board;
+    private int rows = Hex.totalInRow;
+    private int cols = Hex.totalInCol;
+    private static Player[] players = new Player[2];
+
+    // พื้นที่เริ่มต้นของผู้เล่น
+    int[] init_player1Area = {0, 1, 2, 8, 9, 16};
+    int[] init_player2Area = {47, 54, 55, 61, 62, 63};
+
+    private MapUtil() {
+        initializeMap();
+    }
+
+    public static MapUtil getInstance() {
+        if (instance == null) {
+            instance = new MapUtil();
+        }
+        return instance;
+    }
+
+    public void initializeMap() {
+        board = new Hex[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                board[i][j] = new Hex(i, j);
+            }
+        }
+    }
+
+    public Hex[][] getBoard() {
+        return board;
+    }
+
+    // ตั้งค่าพื้นที่เริ่มต้นให้กับผู้เล่น
+    public static void setDefaultMap() {
+        MapUtil util = getInstance();
+        if (players[0] != null && players[1] != null) {
+            for (int pos : util.init_player1Area) {
+                int r = pos / util.cols;
+                int c = pos % util.cols;
+                util.board[r][c].setOwner(players[0]);
+            }
+            for (int pos : util.init_player2Area) {
+                int r = pos / util.cols;
+                int c = pos % util.cols;
+                util.board[r][c].setOwner(players[1]);
+            }
+        }
+    }
+
+    public static Player[] getPlayers() {
+        return players;
+    }
+
+    public static void setPlayers(Player p1, Player p2) {
+        players[0] = p1;
+        players[1] = p2;
+    }
+}

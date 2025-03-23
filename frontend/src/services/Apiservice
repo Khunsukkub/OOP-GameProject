@@ -1,0 +1,47 @@
+File: services/gameService.ts
+ไฟล์นี้รวบรวมฟังก์ชันที่ใช้ติดต่อกับ backend ด้วย axios
+// services/gameService.ts
+import axios from "axios";
+
+const API_URL = "http://localhost:8080/api"; // เปลี่ยน URL ให้ตรงกับ backend ของคุณ
+
+export const getGameState = async () => {
+  const response = await axios.get(`${API_URL}/game-state`);
+  return response.data;
+};
+
+export const buyTile = async (playerId: string) => {
+  const response = await axios.post(`${API_URL}/buy-tile`, { playerId });
+  return response.data;
+};
+
+export const buyMinion = async (
+  playerId: string,
+  minion: { name: string; color: string; cost: number }
+) => {
+  const response = await axios.post(`${API_URL}/buy-minion`, {
+    playerId,
+    ...minion,
+  });
+  return response.data;
+};
+
+export const endTurn = async () => {
+  const response = await axios.post(`${API_URL}/end-turn`);
+  return response.data;
+};
+
+export const submitMinions = async (playerId: string, minions: any[]) => {
+  const response = await axios.post(`${API_URL}/player/${playerId}/minions`, { minions });
+  return response.data;
+};
+
+export const initGame = async (mode: string, player1: string, player2: string) => {
+  const response = await axios.post(`${API_URL}/game/init`, { mode, player1, player2 });
+  return response.data;
+};
+
+export const getBotMove = async (mode: "PVB" | "BVB") => {
+  const response = await axios.get(`${API_URL}/bot-move`, { params: { mode } });
+  return response.data;
+};

@@ -1,0 +1,32 @@
+รับข้อมูลของมินเนี่ยนจาก frontend แล้วสร้างออบเจกต์ Minion
+package model;
+
+public class MinionSetting {
+    public static Minion[] design(MinionData[] minionDataArray) {
+        int count = minionDataArray.length;
+        Minion[] minions = new Minion[count];
+        for (int i = 0; i < count; i++) {
+            MinionData data = minionDataArray[i];
+            minions[i] = new Minion(data.getName(), data.getInitHp(), data.getDefenseFactor(), data.getSpawnCost(), data.getStrategy());
+        }
+        return minions;
+    }
+
+    public static class MinionData {
+        private String name;
+        private double initHp;
+        private double defenseFactor;
+        private int spawnCost;
+        private String strategy;
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public double getInitHp() { return initHp; }
+        public void setInitHp(double initHp) { this.initHp = initHp; }
+        public double getDefenseFactor() { return defenseFactor; }
+        public void setDefenseFactor(double defenseFactor) { this.defenseFactor = defenseFactor; }
+        public int getSpawnCost() { return spawnCost; }
+        public void setSpawnCost(int spawnCost) { this.spawnCost = spawnCost; }
+        public String getStrategy() { return strategy; }
+        public void setStrategy(String strategy) { this.strategy = strategy; }
+    }
+}

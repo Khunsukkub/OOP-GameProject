@@ -1,0 +1,14 @@
+คำนวณดอกเบี้ย (รายได้เพิ่มเติม) ให้กับผู้เล่นในแต่ละเทิร์น
+package model;
+
+public class Interest {
+    private static int base_interate_pct = 5;
+
+    public static double interestCalculating(double playerBudget, int currentTurn) {
+        return (base_interate_pct * Math.log10(playerBudget) * Math.log(currentTurn)) / 100;
+    }
+
+    public static double pct(double playerBudget, int currentTurn) {
+        return playerBudget * interestCalculating(playerBudget, currentTurn);
+    }
+}

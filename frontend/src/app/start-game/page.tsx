@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import "./start-game.css"; // นำเข้า CSS
+import "./start-game.css";
+import {createPlayer} from "@/services/gameService"; // นำเข้า CSS
 
 const StartGamePage: React.FC = () => {
     const router = useRouter();
@@ -17,10 +18,21 @@ const StartGamePage: React.FC = () => {
         setMode(gameMode);
     }, [searchParams]);
 
-    const startGame = () => {
+    const startGame = async () => {
         const p1 = player1.trim() || "Player 1";
         const p2 = player2.trim() || "Player 2";
-        router.push(`/minion?player1=${p1}&player2=${p2}&mode=${mode}`);
+
+        try {
+            // ส่งชื่อไป backend สร้าง Player
+            await createPlayer(p1);
+            await createPlayer(p2);
+
+            // แล้วค่อยไปหน้าเลือก Minion
+            router.push(`/minion?player=1&player1=${p1}&player2=${p2}&mode=${mode}`);
+        } catch (error) {
+            console.error("❌ Error creating players:", error);
+            alert("Error creating players. Please try again.");
+        }
     };
 
     return (

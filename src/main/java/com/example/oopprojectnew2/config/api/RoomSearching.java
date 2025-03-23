@@ -1,4 +1,4 @@
-package api;
+package com.example.oopprojectnew2.config.api;
 
 import exception.BaseException;
 import exception.RoomSearchingException;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/game/api")
 public class RoomSearching {
 
-    @PostMapping("/api/roomSearching")
+    @PostMapping("/roomSearching")
     public ResponseEntity<Void> roomSearching(@RequestBody String input) throws BaseException {
 
         if (input == null) throw RoomSearchingException.idNull();

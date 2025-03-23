@@ -1,4 +1,4 @@
-package api;
+package com.example.oopprojectnew2.config.api;
 
 import exception.BaseException;
 import exception.UserException;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/game/api")
 public class CreatePlayer {
 
-    @PostMapping("/api/createPlayer")
+    @PostMapping("/createPlayer")
     public ResponseEntity<Void> createPlayer(@RequestBody String playerName) throws BaseException {
 
         if(playerName == null || playerName.isEmpty()) throw UserException.nameNull();
@@ -37,7 +37,7 @@ public class CreatePlayer {
 
         // ถ้ายังไม่ครบสองคน ให้ส่งกลับไปที่หน้าเดิม
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", "/waitingForPlayer")
+                .header("Location", "/game/api/NumbersMinionSetting") // ✅ redirect แบบ path เต็ม
                 .build();
     }
 }

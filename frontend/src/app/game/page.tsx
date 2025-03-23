@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import GameBoard from "@/components/GameBoard";
 import PlayerInfo from "@/components/PlayerInfo";
 import MinionShop from "@/components/MinionShop";
-import { getGameState, buyTile, buyMinion, endTurn } from "@/services/GameService";
+import { getGameState, buyTile, buyMinion, endTurn } from "@/services/gameService";
 import "./game.css";
 
 const GamePage: React.FC = () => {

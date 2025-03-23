@@ -1,6 +1,6 @@
 package model;
 
-import api.SetGameMode;
+import com.example.oopprojectnew2.config.api.SetGameMode;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +12,17 @@ public class GameState {
     private List<Player> players = new ArrayList<>();
     String gameMode;
 
+    public List<Player> getPlayers() {
+        return players;
+    }
+    public Player getPlayerByNumber(int number) {
+        for (Player player : players) {
+            if (player.Number == number) {
+                return player;
+            }
+        }
+        throw new IllegalArgumentException("Player not found with number: " + number);
+    }
     public static GameState getInstance() {
         if (instance == null) {
             instance = new GameState();
@@ -31,7 +42,5 @@ public class GameState {
         }
     }
 
-    public Collection<Object> getPlayers() {
-        return Collections.singleton(players);
-    }
+
 }

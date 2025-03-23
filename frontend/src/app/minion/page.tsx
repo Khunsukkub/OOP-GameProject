@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import axios from "axios";
 import "./minion.css";
 
 const MinionPage: React.FC = () => {
@@ -11,6 +12,7 @@ const MinionPage: React.FC = () => {
     const player = searchParams.get("player") || "1"; // ตรวจสอบว่าเป็น Player 1 หรือ 2
     const player1Name = searchParams.get("player1") || "Player 1";
     const player2Name = searchParams.get("player2") || "Player 2";
+    const mode = searchParams.get("mode") || "PVP";
 
     // State สำหรับเลือก Minion
     const [selectedMinions, setSelectedMinions] = useState<number>(1);
@@ -22,13 +24,13 @@ const MinionPage: React.FC = () => {
     // สีของ Minion
     const minionColors = ["#FF5733", "#33FF57", "#3357FF", "#F4D03F", "#9B59B6"];
 
-    // ✅ เมื่อ Player เปลี่ยน รีเซ็ตค่า Minion (ป้องกันข้อมูลค้างจาก Player 1)
+    // เมื่อ Player เปลี่ยน รีเซ็ตค่า Minion (ป้องกันข้อมูลค้างจาก Player ก่อนหน้า)
     useEffect(() => {
         setMinionNames({});
         setMinionDefense({});
         setMinionCodes({});
         setSelectedMinions(1);
-    }, [player]); // เปลี่ยน Player แล้วรีเซ็ต State
+    }, [player]);
 
     const handleMinionSelection = (num: number) => {
         setSelectedMinions(num);
@@ -57,7 +59,8 @@ const MinionPage: React.FC = () => {
         }
     };
 
-    const submitAll = () => {
+    const submitAll = async () => {
+        // ตรวจสอบข้อมูลของแต่ละ minion
         for (let i = 1; i <= selectedMinions; i++) {
             if (!minionNames[i] || !minionDefense[i]) {
                 alert(`Minion ${i} needs a name and defense value.`);
@@ -65,29 +68,43 @@ const MinionPage: React.FC = () => {
             }
         }
 
-        // แปลงข้อมูล Minion ให้เป็น JSON
+        // แปลงข้อมูล Minion ให้เป็น JSON ตามที่ backend คาดหวัง
         const minions = Object.keys(minionNames).map((key, index) => ({
             name: minionNames[parseInt(key)],
             color: minionColors[index % minionColors.length],
-            cost: 10 + index * 5, // ตั้งราคา Minion ให้เพิ่มขึ้นทีละ 5
+            defense: minionDefense[parseInt(key)],
+            code: minionCodes[parseInt(key)] || "",
+            cost: 10 + index * 5, // ตั้งราคา minion ให้เพิ่มขึ้นทีละ 5
         }));
 
-        // ✅ บันทึกค่า Minion ของแต่ละ Player แยกกันใน LocalStorage
-        localStorage.setItem(`selectedMinions-${player}`, JSON.stringify(minions));
-
-        if (player === "1") {
-            // Player 1 เสร็จ → ไปที่หน้าเลือก Minion ของ Player 2
-            router.push(`/minion?player=2&player1=${player1Name}&player2=${player2Name}&mode=${searchParams.get("mode")}`);
-        } else {
-            // Player 2 เสร็จ → ไปที่หน้าเกม
-            router.push(`/game?player1=${player1Name}&player2=${player2Name}&mode=${searchParams.get("mode")}`);
+        try {
+            // ส่งข้อมูลไปยัง API ของ backend (แก้ไข URL ให้ตรงกับ backend ของคุณ)
+            await axios.post("http://localhost:8001/game/api/player/minions", {
+                player: player,
+                minions: minions,
+            });
+            // หากส่งข้อมูลสำเร็จ
+            if (player === "1") {
+                // Player 1 เสร็จแล้ว → ไปที่หน้าเลือก Minion ของ Player 2
+                router.push(
+                    `/minion?player=2&player1=${player1Name}&player2=${player2Name}&mode=${mode}`
+                );
+            } else {
+                // Player 2 เสร็จแล้ว → ไปที่หน้าเกม
+                router.push(
+                    `/game?player1=${player1Name}&player2=${player2Name}&mode=${mode}`
+                );
+            }
+        } catch (error) {
+            console.error("Error submitting minions:", error);
+            alert("Error submitting minions. Please try again.");
         }
     };
 
     return (
         <div className="container">
             <h1>Select Your Minions</h1>
-            <h2>{player === "1" ? player1Name : player2Name}</h2> {/* แสดงชื่อผู้เล่น */}
+            <h2>{player === "1" ? player1Name : player2Name}</h2>
 
             <div id="minionSelection">
                 <label>Choose number of Minions (1-5):</label>
@@ -105,7 +122,12 @@ const MinionPage: React.FC = () => {
                     const minionNumber = i + 1;
                     return (
                         <div key={minionNumber} className="minion-row">
-                            <div className="minion-icon" style={{ backgroundColor: minionColors[(minionNumber - 1) % minionColors.length] }} />
+                            <div
+                                className="minion-icon"
+                                style={{
+                                    backgroundColor: minionColors[(minionNumber - 1) % minionColors.length],
+                                }}
+                            />
                             <button onClick={() => handleMinionClick(minionNumber)}>
                                 Minion {minionNumber}
                             </button>

@@ -20,6 +20,23 @@ public class Hex {
         boolean ownerState = false;
     }
 
+    public String hexStatus() {
+        StringBuilder status = new StringBuilder();
+
+        status.append("Position: (").append(row).append(", ").append(col).append("), ");
+        status.append("Price: ").append(hex_price).append(", ");
+        status.append("Player Number: ").append(playerNumber).append(", ");
+        status.append("Owner State: ").append(ownerState).append(", ");
+        status.append("Minion State: ").append(minionState).append(", ");
+
+        if (minionState && minion != null) {
+            status.append("Minion: ").append(minion.name).append(", ");
+        }
+
+        return status.toString();
+    }
+
+
     public boolean isOwner() {
         return ownerState;
     }

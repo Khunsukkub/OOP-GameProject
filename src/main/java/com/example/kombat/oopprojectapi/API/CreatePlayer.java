@@ -22,6 +22,7 @@ import java.util.Map;
 public class CreatePlayer {
     Player player1;
     Player player2;
+    public static List<Player> playerList = new ArrayList<>();
 
     //หน้านี้ ถอดแบบมาจากหน้าใน canva // ถ้ากด Summit จะทำการสร้าง Player ทั้งสองคน พร้อมกับส่งไปหน้า เลือกจำนวนมินเนี่ยน
     @PostMapping("/createPlayer") //หลังจากกรอกอะไรเสร็จ จะเข้ามาหน้านี้ เพื่อสร้างตัวละคร โดยตัวแปรแบบ JSON คือ {"playerName1" : "Khun" , "playerName2" : "EiEi"}
@@ -33,7 +34,6 @@ public class CreatePlayer {
             throw UserException.nameNull();
         }
 
-        List<Player> playerList = new ArrayList<>();
         player1 = new Player(playerName1, MainGame.init_budget, 1);
         player2 = new Player(playerName2, MainGame.init_budget, 2);
         playerList.add(player1);

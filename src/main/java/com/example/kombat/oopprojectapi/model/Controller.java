@@ -1,5 +1,7 @@
 package com.example.kombat.oopprojectapi.model;
 
+import com.example.kombat.oopprojectapi.request.PurchaseResponse;
+
 import java.util.Scanner;
 
 public class Controller {
@@ -55,8 +57,8 @@ public class Controller {
                 show(player);
                 break;
             case "buyhex":
-                buyHex(player);
-                show(player);
+//                buyHex(player);
+//                show(player);
                 break;
             case "end":
                 mainGame.endTurn();
@@ -67,9 +69,9 @@ public class Controller {
         }
     }
 
-    private static void buyHex(Player player) {
-        map.showBuyAbleHex(player);
-    }
+//    private static void buyHex(Player player) {
+//        map.showBuyAbleHex(player);
+//    }
 
     private static void buyMinion(Player player) {
         System.out.println("Minion in stock:");
@@ -138,6 +140,18 @@ public class Controller {
 
         } catch (Exception e) {
             System.out.println("Invalid input! Please enter coordinates in the format: row,col");
+        }
+    }
+
+    //Func ตรวจสอบ คุณสมบัติในการซื้อช่องนี้
+    public static PurchaseResponse buySelectedHex(Player player, Hex hex) {
+        if (player.budget > hex.getHexPrice()) {
+            player.budget -= hex.getHexPrice();
+            hex.setOwner(player);
+            player.addHex(hex);
+            return new PurchaseResponse("ซื้อสำเร็จ", player.ownHex);
+        } else {
+            return new PurchaseResponse("คุณมีเงินไม่มากพอ", null);
         }
     }
 

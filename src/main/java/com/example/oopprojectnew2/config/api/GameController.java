@@ -8,6 +8,7 @@ import model.Player;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,18 +38,27 @@ public class GameController {
         GameState state = GameState.getInstance();
         Map<String, Object> response = new HashMap<>();
 
-        response.put("turn", 1); // ดึงจาก MainGame ถ้ามีระบบ turn จริง
-        response.put("currentPlayer", "Player 1"); // สามารถปรับเป็น dynamic ได้
+        response.put("turn", 1); // TODO: เปลี่ยนเป็น dynamic ถ้ามีระบบ turn จริง
+        response.put("currentPlayer", "Player 1"); // TODO: เปลี่ยนเป็น dynamic
 
         Map<String, Object> playerData = new HashMap<>();
         for (Player player : state.getPlayers()) {
             Map<String, Object> data = new HashMap<>();
             data.put("money", player.budget);
-            data.put("minions", player.getMinions().stream().map(minion -> Map.of(
-                    "name", minion.name,
-                    "color", minion.color,
-                    "cost", minion.spawn_cost
-            )).collect(Collectors.toList()));
+
+            List<Map<String, Object>> minionList = new ArrayList<>();
+            if (player.ownMinion != null) {
+                for (Minion minion : player.ownMinion) {
+                    if (minion == null) continue;
+                    Map<String, Object> minionData = new HashMap<>();
+                    minionData.put("name", minion.name);
+                    minionData.put("color", minion.color);
+                    minionData.put("cost", minion.spawn_cost);
+                    minionList.add(minionData);
+                }
+            }
+
+            data.put("minions", minionList);
             playerData.put(player.name, data);
         }
 

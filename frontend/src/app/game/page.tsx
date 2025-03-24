@@ -28,6 +28,7 @@ const GamePage: React.FC = () => {
         async function fetchGameState() {
             try {
                 const state = await getGameState();
+                console.log("🎯 Game state:", state); // ✅ Debug
                 setGameState(state);
             } catch (error) {
                 console.error("Error fetching game state:", error);
@@ -80,11 +81,21 @@ const GamePage: React.FC = () => {
             </div>
 
             <div className="game-content">
-                <GameBoard minions={[]} />
+                <GameBoard
+                    minions={Object.entries(playerData)
+                        .flatMap(([_, data]) => data.minions.map((m, index) => ({
+                            id: index,
+                            name: m.name,
+                            color: m.color,
+                            position: { q: index % 8, r: Math.floor(index / 8) }, // ตำแหน่งจำลอง
+                        })))
+                    }
+                />
 
                 {showShop && (
                     <MinionShop
-                        minionList={playerData[currentPlayer].minions}
+                        minionList={playerData?.[currentPlayer]?.minions || []}
+
                         onClose={() => setShowShop(false)}
                         onBuyMinion={handleBuyMinion}
                     />

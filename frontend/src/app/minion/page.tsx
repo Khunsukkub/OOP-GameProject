@@ -86,14 +86,14 @@ const MinionPage: React.FC = () => {
             // ✅ ใช้ URL ที่ backend ส่งกลับมา
             const redirectUrl = res.data;
 
-            // ✅ ไปยัง path ที่ backend กำหนด (พร้อมพารามิเตอร์เดิม)
             if (redirectUrl === "/game") {
                 router.push(`/game?player1=${player1Name}&player2=${player2Name}&mode=${mode}`);
             } else if (redirectUrl === "/waitingForPlayer") {
+                // 👉 Player 1 รอ Player 2
                 router.push(`/waitingForPlayer?player1=${player1Name}&player2=${player2Name}&mode=${mode}`);
             } else {
-                // fallback เผื่อ backend ส่งค่าอื่นมา
-                router.push("/");
+                // เผื่อ fallback
+                router.push(`/game?player1=${player1Name}&player2=${player2Name}&mode=${mode}`);
             }
         } catch (error) {
             console.error("Error submitting minions:", error);

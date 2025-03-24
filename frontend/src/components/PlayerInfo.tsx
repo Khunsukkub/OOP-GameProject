@@ -10,10 +10,14 @@ type Minion = {
 };
 
 type PlayerInfoProps = {
-    playerData: Record<string, { money: number; minions: Minion[] }>;
+
+    playerData: Record<string, { money: number; minions: Minion[] }> | undefined;
 };
 
 const PlayerInfo: React.FC<PlayerInfoProps> = ({ playerData }) => {
+    if (!playerData) return null; //// ✅ ป้องกัน error ถ้ายังโหลดไม่เสร็จ
+    if (!playerData || Object.keys(playerData).length === 0) return null;
+
     return (
         <div className="player-info">
             {Object.entries(playerData).map(([player, data]) => (

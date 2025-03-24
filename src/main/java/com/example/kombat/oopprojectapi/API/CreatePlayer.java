@@ -46,4 +46,31 @@ public class CreatePlayer {
         return ResponseEntity.ok(response); // ส่งข้อมูล + URL กลับไป
     }
 
+
+//    @PostMapping("/createPlayer")
+//    public ResponseEntity<Map<String, Object>> createPlayer(@RequestBody Map<String, String> request) throws BaseException {
+//        String playerName = request.get("playerName"); // รับชื่อผู้เล่นแต่ละคน
+//
+//        if(playerName == null || playerName.isEmpty()) {
+//            throw UserException.nameNull();
+//        }
+//
+//        // สร้าง Player ใหม่ (สมมุติ generatePlayerId() เป็นฟังก์ชันสร้างไอดีที่ไม่ซ้ำ)
+//        Player newPlayer = new Player(playerName, MainGame.init_budget, playerList.size()+1);
+//
+//        // เก็บ player ลงใน lobby (ซึ่งเป็น global variable หรือจัดการใน database)
+//        playerList.add(newPlayer);
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("player", newPlayer);
+//
+//        // ถ้า lobby เต็ม (ครบ 2 คน) ส่ง URL ไปให้เริ่มเกม
+//        if(playerList.size() == 2) {
+//            response.put("redirectUrl", "/kombat/VoteNumbersMinionSetting");
+//        }
+//
+//        return ResponseEntity.ok(response);
+//    }
+
+
 }

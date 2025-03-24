@@ -82,14 +82,14 @@ const GamePage: React.FC = () => {
 
             <div className="game-content">
                 <GameBoard
-                    minions={Object.entries(playerData)
-                        .flatMap(([_, data]) => data.minions.map((m, index) => ({
-                            id: index,
-                            name: m.name,
-                            color: m.color,
-                            position: { q: index % 8, r: Math.floor(index / 8) }, // ตำแหน่งจำลอง
-                        })))
-                    }
+                minions={Object.entries(playerData)
+                .flatMap(([_, data]) => data.minions.map((m, index) => ({
+                    id: index,
+                    name: m.name,
+                    color: m.color,
+                    position: { q: index % 8, r: Math.floor(index / 8) }, // ตำแหน่งจำลอง
+                })))
+            }
                 />
 
                 {showShop && (

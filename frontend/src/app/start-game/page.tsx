@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import "./start-game.css";
+import {roomSearching} from "@/services/gameService";
 
 const StartGamePage: React.FC = () => {
     const router = useRouter();
@@ -20,10 +21,7 @@ const StartGamePage: React.FC = () => {
         }
 
         try {
-            await axios.post("http://localhost:8001/game/api/roomSearching", {
-                name: trimmedName,
-            });
-
+            await roomSearching(trimmedName);
             router.push(`/roomSearching?name=${trimmedName}&mode=${mode}`);
         } catch (error: any) {
             if (error.response?.status === 409) {

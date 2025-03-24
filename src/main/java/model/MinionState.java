@@ -19,4 +19,9 @@ public class MinionState {
         if(playerNumber == 1) player1Minion.add(minion);
         else if(playerNumber == 2) player2Minion.add(minion);
     }
+    public static List<Minion> getMinionsByPlayerNumber(int playerNumber) {
+        if (playerNumber == 1) return player1Minion;
+        else if (playerNumber == 2) return player2Minion;
+        return new ArrayList<>();
+    }
 }

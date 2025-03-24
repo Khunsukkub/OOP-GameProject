@@ -9,6 +9,10 @@ const API_URL = "http://localhost:8001/game/api";
 
 // ✅ แก้ให้เหลือแบบนี้ทั้งหมด:
 
+export const roomSearching = async (name: string) => {
+    await axios.post("http://localhost:8001/game/api/roomSearching", { name });
+};
+
 
 
 export const getGameState = async () => {

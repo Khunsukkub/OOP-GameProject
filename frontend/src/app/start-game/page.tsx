@@ -1,53 +1,41 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
-import "./start-game.css";
 
-const StartGamePage: React.FC = () => {
+const WaitingForPlayer: React.FC = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
+    const player1 = searchParams.get("player1") || "Player 1";
+    const player2 = searchParams.get("player2") || "Player 2";
     const mode = searchParams.get("mode") || "PVP";
-    const [playerName, setPlayerName] = useState<string>("");
 
-    const handleStart = async () => {
-        const trimmedName = playerName.trim();
-        if (!trimmedName) {
-            alert("กรุณากรอกชื่อผู้เล่น");
-            return;
-        }
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            try {
+                const response = await axios.get("http://localhost:8001/game/api/checkPlayers");
+                const { ready } = response.data;
 
-        try {
-            await axios.post("http://localhost:8001/game/api/roomSearching", {
-                name: trimmedName,
-            });
-
-            router.push(`/roomSearching?name=${trimmedName}&mode=${mode}`);
-        } catch (error: any) {
-            if (error.response?.status === 409) {
-                alert("ชื่อซ้ำ หรือมีผู้เล่นครบแล้ว กรุณาเปลี่ยนชื่อหรือเริ่มเกมใหม่");
-            } else {
-                alert("Error creating player. Please try again.");
-                console.error(error);
+                if (ready) {
+                    router.push(`/game?player1=${player1}&player2=${player2}&mode=${mode}`);
+                }
+            } catch (error) {
+                console.error("❌ Failed to check players:", error);
             }
-        }
-    };
+        }, 3000); // เช็คทุก 3 วินาที
+
+        return () => clearInterval(interval); // clear เมื่อ component ถูก unmount
+    }, []);
 
     return (
-        <div className="container">
-            <h1>Enter Player Name ({mode})</h1>
-            <input
-                type="text"
-                placeholder="Your Name"
-                value={playerName}
-                onChange={(e) => setPlayerName(e.target.value)}
-            />
-            <button onClick={handleStart}>Start Game 🎮</button>
-            <button onClick={() => router.push("/mode")}>Back ⬅️</button>
+        <div style={{ textAlign: "center", marginTop: "100px" }}>
+            <h1>🕒 Waiting for another player...</h1>
+            <p>Player 1: {player1}</p>
+            <p>Waiting for Player 2 to submit minions...</p>
         </div>
     );
 };
 
-export default StartGamePage;
+export default WaitingForPlayer;

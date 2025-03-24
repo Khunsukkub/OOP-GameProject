@@ -66,7 +66,7 @@ public class MinionSettingController {
         // ส่งกลับข้อมูลเป็น JSON
         Map<String, Object> response = new HashMap<>();
         response.put("nextId", nextId+1);
-        response.put("message", "Minion saved successfully");
+        response.put("message", "Minion " + (nextId) +" saved successfully");
 
         return ResponseEntity.ok(response);
     }
@@ -83,7 +83,7 @@ public class MinionSettingController {
 
     // เอาอันนี้ไปใส่ในปุ่ม Summit เพื่อเข้าเริ่มเกม
     @GetMapping("/MinionSettingSummit")
-    public ResponseEntity<Minion[]> minionSettingSummit() {
+    public ResponseEntity<Map<String, Object>> minionSettingSummit() {
         // บันทึก Minions ที่ตั้งค่า
         MainGame.minionList = tempMinionSetting.toArray(new Minion[0]);
 
@@ -100,10 +100,12 @@ public class MinionSettingController {
         // เก็บแผนที่ Hex ในเกม (เพิ่มใน MainGame หรือที่เหมาะสม)
         Controller.setMap(hexGrid);
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("minionList", MainGame.minionList);
+        response.put("redirectUrl", "/kombat/MainGame");
+
         // ส่ง `minionList` ไปยังหน้าบ้าน (frontend) เป็น List ของ Minion
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", "/kombat/MainGame") // เข้าเกม
-                .body(MainGame.minionList); // ส่ง minionList ใน body ของ response
+        return ResponseEntity.ok(response); // ส่งข้อมูล + URL กลับไป
     }
 
 

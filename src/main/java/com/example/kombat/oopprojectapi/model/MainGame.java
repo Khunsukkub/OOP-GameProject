@@ -11,7 +11,7 @@ public class MainGame {
     public static int max_turns = 69;
     public static double init_budget = 10000;
     private static double turn_budget = 90;
-    private static double max_budget = 23456;
+    public static double max_budget = 23456;
     public static int max_spawns = 47;
     public static int spawn_lefts = max_spawns;
     public static Minion[] minionList;
@@ -25,6 +25,10 @@ public class MainGame {
             instance = new MainGame();
         }
         return instance;
+    }
+
+    public void setMinionList(Minion[] minionList) {
+        MainGame.minionList = minionList;
     }
 
     public static void setNumberOfMinion (int number) {

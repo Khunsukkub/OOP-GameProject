@@ -2,6 +2,8 @@ package com.example.kombat.oopprojectapi.API;
 
 import com.example.kombat.oopprojectapi.exception.BaseException;
 import com.example.kombat.oopprojectapi.exception.MinionException;
+import com.example.kombat.oopprojectapi.model.Controller;
+import com.example.kombat.oopprojectapi.model.Hex;
 import com.example.kombat.oopprojectapi.model.MainGame;
 import com.example.kombat.oopprojectapi.model.Minion;
 import com.example.kombat.oopprojectapi.request.MMinionRequest;
@@ -80,12 +82,30 @@ public class MinionSettingController {
 
 
     // เอาอันนี้ไปใส่ในปุ่ม Summit เพื่อเข้าเริ่มเกม
-    @PostMapping("/MinionSettingSummit")
-    public ResponseEntity<Void> minionSettingSummit() {
+    @GetMapping("/MinionSettingSummit")
+    public ResponseEntity<Minion[]> minionSettingSummit() {
+        // บันทึก Minions ที่ตั้งค่า
+        MainGame.minionList = tempMinionSetting.toArray(new Minion[0]);
+
+        // สร้างแผนที่ Hex ขนาด 8x8
+        Hex[][] hexGrid = new Hex[Hex.totalInRow][Hex.totalInCol];
+
+        // กำหนดค่าให้กับ Hex แต่ละตัวในแผนที่
+        for (int row = 0; row < Hex.totalInRow; row++) {
+            for (int col = 0; col < Hex.totalInCol; col++) {
+                hexGrid[row][col] = new Hex(row, col); // สร้าง Hex ที่มีตำแหน่ง row, col
+            }
+        }
+
+        // เก็บแผนที่ Hex ในเกม (เพิ่มใน MainGame หรือที่เหมาะสม)
+        Controller.setMap(hexGrid);
+
+        // ส่ง `minionList` ไปยังหน้าบ้าน (frontend) เป็น List ของ Minion
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", "/kombat/MainGame") //เข้าเกม!
-                .build();
+                .header("Location", "/kombat/MainGame") // เข้าเกม
+                .body(MainGame.minionList); // ส่ง minionList ใน body ของ response
     }
+
 
     public void addMinionForPlayer(Minion minion) {
         tempMinionSetting.add(minion);

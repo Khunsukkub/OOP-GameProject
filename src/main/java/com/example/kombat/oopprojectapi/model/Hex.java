@@ -13,7 +13,7 @@ public class Hex {
     public static int totalInCol = 8;
     public static int total = totalInRow*totalInCol;
 
-    Hex (int row , int col) {
+    public Hex(int row, int col) {
         this.row = row;
         this.col = col;
         int playerNumber = 0;

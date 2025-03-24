@@ -17,6 +17,14 @@ public class Controller {
         return instance;
     }
 
+    public static void setMap(Hex[][] map) {
+        Controller.map.setMap(map);
+    }
+
+    public static void initializeMap() {
+        map.getDefaultPlayerArea();
+    }
+
     public static void show(Player player) {
         MainGame.NewMapGenarate();
         System.out.println("( BuyMinion / BuyHex / END )");

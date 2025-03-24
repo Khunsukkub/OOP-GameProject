@@ -6,7 +6,7 @@ public class Map {
     private static Map instance;
     private static Controller controller;
     private static MainGame mainGame;
-    private Hex[][] map;
+    public Hex[][] map;
     private int row = Hex.totalInRow;
     private int col = Hex.totalInCol;
     public static Player[] players = new Player[2];
@@ -21,6 +21,10 @@ public class Map {
             instance = new Map();
         }
         return instance;
+    }
+
+    public void setMap (Hex[][] map) {
+        this.map = map;
     }
 
     public Hex getHexAt(int row, int col) {

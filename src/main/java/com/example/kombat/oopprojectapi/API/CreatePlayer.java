@@ -12,15 +12,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/kombat")
 public class CreatePlayer {
     Player player1;
     Player player2;
 
-    //หน้านี้ ถอดแบบมาจากหน้าใน canva
+    //หน้านี้ ถอดแบบมาจากหน้าใน canva // ถ้ากด Summit จะทำการสร้าง Player ทั้งสองคน พร้อมกับส่งไปหน้า เลือกจำนวนมินเนี่ยน
     @PostMapping("/createPlayer") //หลังจากกรอกอะไรเสร็จ จะเข้ามาหน้านี้ เพื่อสร้างตัวละคร โดยตัวแปรแบบ JSON คือ {"playerName1" : "Khun" , "playerName2" : "EiEi"}
-    public ResponseEntity<Void> createPlayer(@RequestBody PlayerNameRequest playerNames) throws BaseException {
+    public ResponseEntity<List<Player>> createPlayer(@RequestBody PlayerNameRequest playerNames) throws BaseException {
         String playerName1 = playerNames.getPlayerName1();
         String playerName2 = playerNames.getPlayerName2();
 
@@ -28,12 +31,15 @@ public class CreatePlayer {
             throw UserException.nameNull();
         }
 
+        List<Player> playerList = new ArrayList<>();
         player1 = new Player(playerName1, MainGame.init_budget, 1);
         player2 = new Player(playerName2, MainGame.init_budget, 2);
+        playerList.add(player1);
+        playerList.add(player2);
 
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header("Location", "/kombat/VoteNumbersMinionSetting") //สร้างตัวเสร็จ จะเข้าไปหน้าโหวตจำนวน Minion
-                .build();
+                .body(playerList);
     }
 
 }

@@ -1,14 +1,12 @@
 package com.example.kombat.oopprojectapi.request;
 
-import com.example.kombat.oopprojectapi.model.Hex;
-
 public class PurchaseResponse {
     private String message;
-    private Hex[] hex;
+    private Object[] data; // สามารถเก็บได้ทั้ง Hex[] และ Minion[]
 
-    public PurchaseResponse(String message, Hex hex[]) {
+    public PurchaseResponse(String message, Object[] data) {
         this.message = message;
-        this.hex = hex;
+        this.data = data;
     }
 
     // Getter & Setter
@@ -16,7 +14,7 @@ public class PurchaseResponse {
         return message;
     }
 
-    public Hex[] getHex() {
-        return hex;
+    public Object[] getData() {
+        return data;
     }
 }

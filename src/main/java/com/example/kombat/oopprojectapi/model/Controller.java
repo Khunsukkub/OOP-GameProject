@@ -53,8 +53,8 @@ public class Controller {
 
         switch (action) {
             case "buyminion":
-                if (MainGame.spawn_lefts != 0) buyMinion(player);
-                show(player);
+//                if (MainGame.spawn_lefts != 0) buyMinion(player);
+//                show(player);
                 break;
             case "buyhex":
 //                buyHex(player);
@@ -73,30 +73,30 @@ public class Controller {
 //        map.showBuyAbleHex(player);
 //    }
 
-    private static void buyMinion(Player player) {
-        System.out.println("Minion in stock:");
-        for (Minion minion : MainGame.minionList) {
-            System.out.println("   " + minion.name + "  |  cost: " + minion.spawn_cost);
-        }
-        System.out.println("EXIT");
-
-        System.out.print("Please enter the minion you want to buy: ");
-        String action = scanner.nextLine();
-
-        for (int i = 0; i < MainGame.minionList.length; i++) {
-            if (isEnoughBudget(action, i, player)) {
-                Minion minion = MainGame.minionList[i];
-                player.addMinion(minion);
-                player.budget -= minion.spawn_cost;
-                System.out.println(player.name + " bought " + minion.name + "!!");
-                buyMinionState = true;
-                deploy(minion,player);
-                return; // ออกจาก loop ทันทีเมื่อซื้อสำเร็จ
-            }
-        }
-        System.out.println("You don't have enough Budget/Hex/SpawnLefts to buy this minion.");
-        buyMinionState = false;
-    }
+//    private static void buyMinion(Player player) {
+//        System.out.println("Minion in stock:");
+//        for (Minion minion : MainGame.minionList) {
+//            System.out.println("   " + minion.name + "  |  cost: " + minion.spawn_cost);
+//        }
+//        System.out.println("EXIT");
+//
+//        System.out.print("Please enter the minion you want to buy: ");
+//        String action = scanner.nextLine();
+//
+//        for (int i = 0; i < MainGame.minionList.length; i++) {
+//            if (isEnoughBudget(action, i, player)) {
+//                Minion minion = MainGame.minionList[i];
+//                player.addMinion(minion);
+//                player.budget -= minion.spawn_cost;
+//                System.out.println(player.name + " bought " + minion.name + "!!");
+//                buyMinionState = true;
+//                deploy(minion,player);
+//                return; // ออกจาก loop ทันทีเมื่อซื้อสำเร็จ
+//            }
+//        }
+//        System.out.println("You don't have enough Budget/Hex/SpawnLefts to buy this minion.");
+//        buyMinionState = false;
+//    }
 
     private static boolean isEnoughBudget(String action, int index, Player player) {
         return (action.equals(MainGame.minionList[index].name)
@@ -143,9 +143,20 @@ public class Controller {
         }
     }
 
+    //Func ตรวจสอบ คุณสมบัติในการซื้อมินเนี่ยนนี้
+    public static PurchaseResponse buyMinion(Player player, Minion minion) {
+        if(player.budget >= minion.spawn_cost) {
+            player.budget -= minion.spawn_cost;
+            player.addMinion(minion);
+            return new PurchaseResponse("ซื้อสำเร็จ" , player.ownMinion);
+        } else {
+            return new PurchaseResponse("คุณมีเงินไม่มากพอ", null);
+        }
+    }
+
     //Func ตรวจสอบ คุณสมบัติในการซื้อช่องนี้
     public static PurchaseResponse buySelectedHex(Player player, Hex hex) {
-        if (player.budget > hex.getHexPrice()) {
+        if (player.budget >= hex.getHexPrice()) {
             player.budget -= hex.getHexPrice();
             hex.setOwner(player);
             player.addHex(hex);

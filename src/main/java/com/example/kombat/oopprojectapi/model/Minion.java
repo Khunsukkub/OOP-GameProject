@@ -8,6 +8,7 @@ public class Minion {
     private double defense_factor;
     private String strategy;
     public int spawn_cost;
+    private Player minion_owner;
 
     private void doStrategy(String strategy) {
         //new MinionStrategyParser(strategy);
@@ -19,6 +20,10 @@ public class Minion {
         this.defense_factor = defense_factor;
         this.spawn_cost = spawn_cost;
         this.strategy = strategy;
+    }
+
+    public void setMinionOwner(Player player) {
+        this.minion_owner = player;
     }
 
     public double getHP() {

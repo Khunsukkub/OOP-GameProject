@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.example.kombat.oopprojectapi.model.Map.map;
@@ -94,6 +95,42 @@ public class Board {
 
     //ฟังก์ชันที่ใช้ในการ ซื้อ Minion
 
+    //ลืมคิดว่า มินเนี่ยน จะต้องถูก new ใหม่ทุกครั้ง เพราะว่า minion แต่ละตัวไม่ใช่ instance เดียวกัน แต่เป็นการสร้างใหม่เรื่อยๆ มาวาง
+    @PostMapping("/{playerId}/buyMinion/{minionName}")
+    public ResponseEntity<PurchaseResponse> buyMinion(@PathVariable String minionName , @PathVariable int playerId) {
+        Minion minion = getMinionByName(minionName);
+        Player player = getPlayerById(playerId);
+
+        PurchaseResponse response = Controller.buyMinion(player, minion);
+
+        if ("ซื้อสำเร็จ".equals(response.getMessage())) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PostMapping("/{playerId}/Deploy/{minionName}/{row}/{col}")
+    public ResponseEntity<String> deployMinion(@PathVariable String minionName, @PathVariable int row, @PathVariable int col, @PathVariable int playerId) {
+        Minion minion = getMinionByName(minionName);
+        Hex hex = Map.getInstance().getHexAt(row, col);
+
+        hex.setMinion(minion);
+
+        return ResponseEntity.ok("วางสำเร็จ");
+    }
+
+    //
+
+    // ฟังก์ชันช่วยในการดึง Minion จาก String
+    private Minion getMinionByName(String minionName) {
+        for (Minion m : MainGame.minionList) {
+            if(m.name == minionName) {
+                return m;
+            }
+        }
+        return null;
+    }
 
     // ฟังก์ชันช่วยในการดึง Player จาก ID
     private Player getPlayerById(int playerId) {
@@ -105,6 +142,5 @@ public class Board {
         }
         return null;  // หากไม่พบ player ก็คืนค่า null
     }
-
 
 }

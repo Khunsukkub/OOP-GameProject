@@ -7,23 +7,15 @@ import axios from "axios";
 // ใช้พอร์ต 8000 ให้ตรงกับ Backend
 const API_URL = "http://localhost:8001/game/api";
 
-export const setGameMode = async (mode: string): Promise<string> => {
-    const response = await axios.post(`${API_URL}/gameMode`, { mode });
-    return response.data; // ✅ redirect URL อยู่ใน body แล้ว
-};
-export const createPlayer = async (name: string) => {
-    await axios.post("http://localhost:8001/game/api/createPlayer", {
-        name,
-    });
-};
-// ฟังก์ชันอื่น ๆ (getGameState, buyTile, buyMinion, endTurn)
+// ✅ แก้ให้เหลือแบบนี้ทั้งหมด:
+
 export const getGameState = async () => {
-    const response = await axios.get(`${API_URL}/api/game-state`);
+    const response = await axios.get(`${API_URL}/game-state`);
     return response.data;
 };
 
 export const buyTile = async (playerId: string) => {
-    const response = await axios.post(`${API_URL}/api/buy-tile`, { playerId });
+    const response = await axios.post(`${API_URL}/buy-tile`, { playerId });
     return response.data;
 };
 
@@ -31,7 +23,7 @@ export const buyMinion = async (
     playerId: string,
     minion: { name: string; color: string; cost: number }
 ) => {
-    const response = await axios.post(`${API_URL}/api/buy-minion`, {
+    const response = await axios.post(`${API_URL}/buy-minion`, {
         playerId,
         ...minion,
     });
@@ -39,7 +31,8 @@ export const buyMinion = async (
 };
 
 export const endTurn = async () => {
-    const response = await axios.post(`${API_URL}/api/end-turn`);
+    const response = await axios.post(`${API_URL}/end-turn`);
     return response.data;
 };
+
 

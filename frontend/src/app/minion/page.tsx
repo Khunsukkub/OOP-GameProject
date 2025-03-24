@@ -68,39 +68,38 @@ const MinionPage: React.FC = () => {
             }
         }
 
-        // แปลงข้อมูล Minion ให้เป็น JSON ตามที่ backend คาดหวัง
         const minions = Object.keys(minionNames).map((key, index) => ({
             name: minionNames[parseInt(key)],
             color: minionColors[index % minionColors.length],
             defense: minionDefense[parseInt(key)],
             code: minionCodes[parseInt(key)] || "",
-            cost: 10 + index * 5, // ตั้งราคา minion ให้เพิ่มขึ้นทีละ 5
+            cost: 10 + index * 5,
         }));
 
         try {
-            // ส่งข้อมูลไปยัง API ของ backend (แก้ไข URL ให้ตรงกับ backend ของคุณ)
-            await axios.post("http://localhost:8001/game/api/player/minions", {
+            // ✅ ส่งข้อมูลไปยัง backend
+            const res = await axios.post("http://localhost:8001/game/api/player/minions", {
                 player: player,
                 minions: minions,
             });
-            // หากส่งข้อมูลสำเร็จ
-            if (player === "1") {
-                // Player 1 เสร็จแล้ว → ไปที่หน้าเลือก Minion ของ Player 2
-                router.push(
-                    `/minion?player=2&player1=${player1Name}&player2=${player2Name}&mode=${mode}`
-                );
+
+            // ✅ ใช้ URL ที่ backend ส่งกลับมา
+            const redirectUrl = res.data;
+
+            // ✅ ไปยัง path ที่ backend กำหนด (พร้อมพารามิเตอร์เดิม)
+            if (redirectUrl === "/game") {
+                router.push(`/game?player1=${player1Name}&player2=${player2Name}&mode=${mode}`);
+            } else if (redirectUrl === "/waitingForPlayer") {
+                router.push(`/waitingForPlayer?player1=${player1Name}&player2=${player2Name}&mode=${mode}`);
             } else {
-                // Player 2 เสร็จแล้ว → ไปที่หน้าเกม
-                router.push(
-                    `/game?player1=${player1Name}&player2=${player2Name}&mode=${mode}`
-                );
+                // fallback เผื่อ backend ส่งค่าอื่นมา
+                router.push("/");
             }
         } catch (error) {
             console.error("Error submitting minions:", error);
             alert("Error submitting minions. Please try again.");
         }
     };
-
     return (
         <div className="container">
             <h1>Select Your Minions</h1>

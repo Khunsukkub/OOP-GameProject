@@ -6,7 +6,7 @@ public class Controller {
     private static Controller instance;
     private static MainGame mainGame = MainGame.getInstance();
     private static Map map = Map.getInstance();
-    private static Scanner scanner = new Scanner(System.in); // ใช้ Scanner เดียวกัน
+    private static Scanner scanner = new Scanner(System.in);
     public static boolean buyMinionState = false;
     public static boolean buyHexState = false;
 
@@ -25,19 +25,21 @@ public class Controller {
 
     private static void actionSystem(Player player) {
         System.out.print("Please enter your action: ");
-        String action = scanner.nextLine().toLowerCase(); // ใช้ scanner เดียวกัน
+        String action = scanner.nextLine().toLowerCase();
 
-        if(action.equals("buyminion")) {
-            if(buyMinionState) {
-                System.out.println("You are bought MINION already!");
+        if (action.equals("buyminion")) {
+            if (buyMinionState) {
+                System.out.println("You already bought a MINION this turn!");
                 show(player);
+                return;
             }
         }
 
-        if(action.equals("buyhex")) {
-            if(buyHexState) {
-                System.out.println("You are bought HEX already!");
+        if (action.equals("buyhex")) {
+            if (buyHexState) {
+                System.out.println("You already bought a HEX this turn!");
                 show(player);
+                return;
             }
         }
 
@@ -61,6 +63,7 @@ public class Controller {
 
     private static void buyHex(Player player) {
         map.showBuyAbleHex(player);
+        buyHexState = true;
     }
 
     private static void buyMinion(Player player) {
@@ -80,8 +83,8 @@ public class Controller {
                 player.budget -= minion.spawn_cost;
                 System.out.println(player.name + " bought " + minion.name + "!!");
                 buyMinionState = true;
-                deploy(minion,player);
-                return; // ออกจาก loop ทันทีเมื่อซื้อสำเร็จ
+                deploy(minion, player);
+                return;
             }
         }
         System.out.println("You don't have enough Budget/Hex/SpawnLefts to buy this minion.");
@@ -89,23 +92,21 @@ public class Controller {
     }
 
     private static boolean isEnoughBudget(String action, int index, Player player) {
-        return (action.equals(MainGame.minionList[index].name)
+        return (action.equalsIgnoreCase(MainGame.minionList[index].name)
                 && player.budget >= MainGame.minionList[index].spawn_cost
-                && player.ownMinion.length < player.ownHex.length); // ใช้ size() แทน length
+                && player.getMinionNumber() < player.getHexNumber());
     }
 
-    private static void deploy(Minion minion , Player player) {
+    private static void deploy(Minion minion, Player player) {
         System.out.print("Choose Hex to deploy [row,col]: ");
-        String hex = scanner.nextLine().trim(); // รับค่า input และลบช่องว่างด้านหน้า/หลัง
+        String hex = scanner.nextLine().trim();
 
         try {
-            String[] coordinates = hex.split(","); // แยกค่าจาก input
-            int row = Integer.parseInt(coordinates[0].trim());
-            int col = Integer.parseInt(coordinates[1].trim());
-            row--;
-            col--;
+            String[] coordinates = hex.split(",");
+            int row = Integer.parseInt(coordinates[0].trim()) - 1;
+            int col = Integer.parseInt(coordinates[1].trim()) - 1;
 
-            Hex targetHex = map.getHexAt(row, col--); // ดึง `Hex` ที่ตำแหน่งนั้น
+            Hex targetHex = map.getHexAt(row, col);
 
             if (targetHex == null) {
                 System.out.println("Invalid Hex! Please choose a valid location.");
@@ -123,14 +124,13 @@ public class Controller {
                 return;
             }
 
-            // วาง Minion บน Hex
             targetHex.setMinion(minion);
-            System.out.println("Minion " + minion.name + " deployed at (" + row + "," + col + ")");
+            System.out.println("Minion " + minion.name + " deployed at (" + (row + 1) + "," + (col + 1) + ")");
             MainGame.spawn_lefts--;
 
         } catch (Exception e) {
             System.out.println("Invalid input! Please enter coordinates in the format: row,col");
+            deploy(minion, player);
         }
     }
-
 }

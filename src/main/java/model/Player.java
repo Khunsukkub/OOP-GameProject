@@ -30,6 +30,10 @@ public class Player {
         ownHex[HexNumber] = hex;
         HexNumber++;
     }
+    public int getPlayerNumber() {
+        return Number;
+    }
+
 
     public int getMinionNumber() {
         return MinionNumber;

@@ -2,25 +2,14 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { setGameMode } from "@/services/gameService";
 import "./mode.css";
 
 const ModeSelection: React.FC = () => {
     const router = useRouter();
 
-    const selectMode = async (mode: string) => {
-        const gameMode =
-            mode === "PVP" ? "PlayerVSPlayer" :
-                mode === "PVB" ? "PlayerVSBot" :
-                    mode === "BVB" ? "BotVSBot" : "PlayerVSPlayer";
-
-        try {
-            const redirectPath = await setGameMode(gameMode); // 🔁 รับ path เช่น "/createPlayer"
-            router.push(redirectPath); // ✅ frontend redirect เอง
-        } catch (error) {
-            console.error("🚨 setGameMode failed:", error);
-            router.push(`/start-game?mode=${mode}`);
-        }
+    const selectMode = (mode: string) => {
+        // ✅ เลือกโหมดแล้วไปหน้ากรอกชื่อ พร้อมส่งโหมดไปด้วย
+        router.push(`/start-game?mode=${mode}`);
     };
 
     return (

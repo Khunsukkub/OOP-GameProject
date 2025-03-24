@@ -11,13 +11,11 @@ export const setGameMode = async (mode: string): Promise<string> => {
     const response = await axios.post(`${API_URL}/gameMode`, { mode });
     return response.data; // ✅ redirect URL อยู่ใน body แล้ว
 };
-export const createPlayer = async (playerName: string) => {
-    const response = await axios.post(`${API_URL}/createPlayer`, playerName, {
-        headers: { "Content-Type": "text/plain" }, // เพราะ backend รับ String ตรง ๆ
+export const createPlayer = async (name: string) => {
+    await axios.post("http://localhost:8001/game/api/createPlayer", {
+        name,
     });
-    return response;
 };
-
 // ฟังก์ชันอื่น ๆ (getGameState, buyTile, buyMinion, endTurn)
 export const getGameState = async () => {
     const response = await axios.get(`${API_URL}/api/game-state`);
@@ -44,3 +42,4 @@ export const endTurn = async () => {
     const response = await axios.post(`${API_URL}/api/end-turn`);
     return response.data;
 };
+

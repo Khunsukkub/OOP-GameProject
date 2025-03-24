@@ -1,59 +1,51 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import axios from "axios";
 import "./start-game.css";
-import {createPlayer} from "@/services/gameService"; // นำเข้า CSS
 
 const StartGamePage: React.FC = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [player1, setPlayer1] = useState<string>("");
-    const [player2, setPlayer2] = useState<string>("");
-    const [mode, setMode] = useState<string>("PVP");
+    const mode = searchParams.get("mode") || "PVP";
+    const [playerName, setPlayerName] = useState<string>("");
 
-    useEffect(() => {
-        const gameMode = searchParams.get("mode") || "PVP";
-        setMode(gameMode);
-    }, [searchParams]);
-
-    const startGame = async () => {
-        const p1 = player1.trim() || "Player 1";
-        const p2 = player2.trim() || "Player 2";
+    const handleStart = async () => {
+        const trimmedName = playerName.trim();
+        if (!trimmedName) {
+            alert("กรุณากรอกชื่อผู้เล่น");
+            return;
+        }
 
         try {
-            // ส่งชื่อไป backend สร้าง Player
-            await createPlayer(p1);
-            await createPlayer(p2);
+            await axios.post("http://localhost:8001/game/api/roomSearching", {
+                name: trimmedName,
+            });
 
-            // แล้วค่อยไปหน้าเลือก Minion
-            router.push(`/minion?player=1&player1=${p1}&player2=${p2}&mode=${mode}`);
-        } catch (error) {
-            console.error("❌ Error creating players:", error);
-            alert("Error creating players. Please try again.");
+            router.push(`/roomSearching?name=${trimmedName}&mode=${mode}`);
+        } catch (error: any) {
+            if (error.response?.status === 409) {
+                alert("ชื่อซ้ำ หรือมีผู้เล่นครบแล้ว กรุณาเปลี่ยนชื่อหรือเริ่มเกมใหม่");
+            } else {
+                alert("Error creating player. Please try again.");
+                console.error(error);
+            }
         }
     };
 
     return (
         <div className="container">
-            <h1>Enter Player Names ({mode})</h1>
+            <h1>Enter Player Name ({mode})</h1>
             <input
                 type="text"
-                placeholder="PLAYER 1 Name"
-                value={player1}
-                onChange={(e) => setPlayer1(e.target.value)}
+                placeholder="Your Name"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
             />
-            <input
-                type="text"
-                placeholder="PLAYER 2 Name"
-                value={player2}
-                onChange={(e) => setPlayer2(e.target.value)}
-            />
-            <button onClick={startGame}>Start Game 🎮</button>
+            <button onClick={handleStart}>Start Game 🎮</button>
             <button onClick={() => router.push("/mode")}>Back ⬅️</button>
-
-
         </div>
     );
 };

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import GameBoard from "@/components/GameBoard";
 import PlayerInfo from "@/components/PlayerInfo";
 import MinionShop from "@/components/MinionShop";
+import TileShop from "@/components/TileShop";
 import { getGameState, buyTile, buyMinion, endTurn } from "@/services/gameService";
 import "./game.css";
 
@@ -21,14 +22,23 @@ const GamePage: React.FC = () => {
         },
     });
     const { turn, currentPlayer, playerData } = gameState;
-    const [showShop, setShowShop] = useState<boolean>(false);
 
-    // เมื่อ component ถูก mount, เรียก API เพื่อดึงสถานะเกมล่าสุดจาก backend
+    const [showShop, setShowShop] = useState<boolean>(false);
+    const [showTileShop, setShowTileShop] = useState<boolean>(false);
+
+    const [availableTiles, setAvailableTiles] = useState<
+        { id: number; price: number; q: number; r: number }[]
+    >([
+        { id: 1, price: 30, q: 1, r: 1 },
+        { id: 2, price: 50, q: 2, r: 2 },
+        { id: 3, price: 80, q: 3, r: 3 },
+    ]);
+
     useEffect(() => {
         async function fetchGameState() {
             try {
                 const state = await getGameState();
-                console.log("🎯 Game state:", state); // ✅ Debug
+                console.log("🎯 Game state:", state);
                 setGameState(state);
             } catch (error) {
                 console.error("Error fetching game state:", error);
@@ -37,14 +47,14 @@ const GamePage: React.FC = () => {
         fetchGameState();
     }, []);
 
-    const handleBuyTile = async () => {
-        try {
-            const updatedState = await buyTile(currentPlayer);
-            setGameState(updatedState);
-            alert(`${currentPlayer} bought a tile!`);
-        } catch (error) {
-            alert(`${currentPlayer} doesn't have enough money to buy a tile!`);
-        }
+    const handleBuyTile = () => {
+        setShowTileShop(true);
+    };
+
+    const handleConfirmBuyTile = (tileId: number) => {
+        alert(`${currentPlayer} bought tile ID: ${tileId}`);
+        setShowTileShop(false);
+        // คุณสามารถเรียก buyTile() จาก backend ได้ที่นี่ถ้ามีระบบรองรับ
     };
 
     const handleBuyMinion = async (name: string, color: string, cost: number) => {
@@ -82,22 +92,29 @@ const GamePage: React.FC = () => {
 
             <div className="game-content">
                 <GameBoard
-                minions={Object.entries(playerData)
-                .flatMap(([_, data]) => data.minions.map((m, index) => ({
-                    id: index,
-                    name: m.name,
-                    color: m.color,
-                    position: { q: index % 8, r: Math.floor(index / 8) }, // ตำแหน่งจำลอง
-                })))
-            }
+                    minions={Object.entries(playerData).flatMap(([_, data]) =>
+                        data.minions.map((m, index) => ({
+                            id: index,
+                            name: m.name,
+                            color: m.color,
+                            position: { q: index % 8, r: Math.floor(index / 8) },
+                        }))
+                    )}
                 />
 
                 {showShop && (
                     <MinionShop
                         minionList={playerData?.[currentPlayer]?.minions || []}
-
                         onClose={() => setShowShop(false)}
                         onBuyMinion={handleBuyMinion}
+                    />
+                )}
+
+                {showTileShop && (
+                    <TileShop
+                        tiles={availableTiles}
+                        onBuyTile={handleConfirmBuyTile}
+                        onClose={() => setShowTileShop(false)}
                     />
                 )}
             </div>

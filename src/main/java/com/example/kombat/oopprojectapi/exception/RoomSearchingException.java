@@ -1,4 +1,4 @@
-package exception;
+package com.example.kombat.oopprojectapi.exception;
 
 public class RoomSearchingException extends BaseException{
     public RoomSearchingException(String code) {

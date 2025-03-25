@@ -1,4 +1,4 @@
-package model;
+package com.example.kombat.oopprojectapi.model;
 
 public class Hex {
     public int playerNumber;
@@ -13,12 +13,29 @@ public class Hex {
     public static int totalInCol = 8;
     public static int total = totalInRow*totalInCol;
 
-    Hex (int row , int col) {
+    public Hex(int row, int col) {
         this.row = row;
         this.col = col;
         int playerNumber = 0;
         boolean ownerState = false;
     }
+
+    public String hexStatus() {
+        StringBuilder status = new StringBuilder();
+
+        status.append("Position: (").append(row).append(", ").append(col).append("), ");
+        status.append("Price: ").append(hex_price).append(", ");
+        status.append("Player Number: ").append(playerNumber).append(", ");
+        status.append("Owner State: ").append(ownerState).append(", ");
+        status.append("Minion State: ").append(minionState).append(", ");
+
+        if (minionState && minion != null) {
+            status.append("Minion: ").append(minion.name).append(", ");
+        }
+
+        return status.toString();
+    }
+
 
     public boolean isOwner() {
         return ownerState;

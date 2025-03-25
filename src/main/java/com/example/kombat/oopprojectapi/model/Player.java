@@ -1,11 +1,6 @@
-package model;
+package com.example.kombat.oopprojectapi.model;
 
 import lombok.Getter;
-
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-import java.util.Arrays;
-import java.util.List;
 
 public class Player {
     public String name;
@@ -21,12 +16,9 @@ public class Player {
         this.budget = Budget;
         this.Number = playerNumber;
     }
-    public List<Minion> getMinions() {
-        List<Minion> list = new ArrayList<>();
-        for (Minion minion : ownMinion) {
-            if (minion != null) list.add(minion);
-        }
-        return list;
+
+    public int getPlayerNumber() {
+        return Number;
     }
 
     public void addMinionList (Minion minion) {
@@ -34,6 +26,7 @@ public class Player {
     }
 
     public void addMinion (Minion minion) {
+        minion.setMinionOwner(this);
         ownMinion[MinionNumber] = minion;
         MinionNumber++;
     }
@@ -42,10 +35,6 @@ public class Player {
         ownHex[HexNumber] = hex;
         HexNumber++;
     }
-    public int getPlayerNumber() {
-        return Number;
-    }
-
 
     public int getMinionNumber() {
         return MinionNumber;

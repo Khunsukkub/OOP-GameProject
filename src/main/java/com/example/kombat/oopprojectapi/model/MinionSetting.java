@@ -1,4 +1,4 @@
-package model;
+package com.example.kombat.oopprojectapi.model;
 
 import java.util.Arrays;
 import java.util.Scanner;

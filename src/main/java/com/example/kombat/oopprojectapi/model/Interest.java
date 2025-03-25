@@ -1,4 +1,4 @@
-package model;
+package com.example.kombat.oopprojectapi.model;
 
 class Interest {
     private static int base_interate_pct = 5;

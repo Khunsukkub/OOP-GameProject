@@ -62,9 +62,9 @@ public class CreatePlayer {
         response.put("player", newPlayer);
 
         // ถ้า lobby เต็ม (ครบ 2 คน) ส่ง URL ไปให้เริ่มเกม
-        if(playerList.size() == 2) {
-            response.put("redirectUrl", "/kombat/VoteNumbersMinionSetting");
-        }
+//        if(playerList.size() == 2) {
+//            response.put("redirectUrl", "/kombat/VoteNumbersMinionSetting");
+//        }
 
         return ResponseEntity.ok(response);
     }

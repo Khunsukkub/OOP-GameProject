@@ -4,10 +4,13 @@ import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import "./start-game.css";
+import {PlayerProvider} from "@/app/context/PlayerContext";
+import {usePlayer} from "@/app/context/PlayerContext";
 
 const StartGamePage: React.FC = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { addPlayer } = usePlayer(); // ตรวจสอบว่า import ใช้จาก context ได้
 
     const mode = searchParams.get("mode") || "PVP";
     const [playerName, setPlayerName] = useState<string>("");
@@ -28,6 +31,7 @@ const StartGamePage: React.FC = () => {
 
             // รับข้อมูล player จาก response
             const createdPlayer = response.data.player;
+            addPlayer(createdPlayer);
             console.log("Player created:", createdPlayer);
 
             // ถ้า response มี redirectUrl หมายความว่าผู้เล่นครบตามจำนวนแล้ว
@@ -63,4 +67,13 @@ const StartGamePage: React.FC = () => {
     );
 };
 
-export default StartGamePage;
+// ห่อ StartGamePage ด้วย PlayerProvider
+const StartGamePageWithProvider: React.FC = () => {
+    return (
+        <PlayerProvider>
+            <StartGamePage />
+        </PlayerProvider>
+    );
+};
+
+export default StartGamePageWithProvider;

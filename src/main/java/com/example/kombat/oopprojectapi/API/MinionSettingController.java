@@ -15,6 +15,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/kombat")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MinionSettingController {
     int nextId = 0;
     private int totalMinions = Integer.parseInt(MainGame.getNumberOfMinion());

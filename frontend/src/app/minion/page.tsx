@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import "./minion.css";
+import { usePlayer } from "@/app/context/PlayerContext";
+import { PlayerProvider } from "@/app/context/PlayerContext"; // import PlayerProvider
 
 const MinionPage: React.FC = () => {
     const router = useRouter();
@@ -20,6 +22,8 @@ const MinionPage: React.FC = () => {
     const [minionDefense, setMinionDefense] = useState<Record<number, number>>({});
     const [minionCodes, setMinionCodes] = useState<Record<number, string>>({});
     const [selectedMinion, setSelectedMinion] = useState<number | null>(null);
+
+    const { players } = usePlayer();  // ใช้ players ที่ได้จาก context
 
     // สีของ Minion
     const minionColors = ["#FF5733", "#33FF57", "#3357FF", "#F4D03F", "#9B59B6"];

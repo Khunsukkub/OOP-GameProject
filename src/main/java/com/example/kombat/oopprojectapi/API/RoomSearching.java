@@ -2,12 +2,10 @@ package com.example.kombat.oopprojectapi.API;
 
 import com.example.kombat.oopprojectapi.exception.BaseException;
 import com.example.kombat.oopprojectapi.exception.RoomSearchingException;
+import com.example.kombat.oopprojectapi.model.GameState;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -23,5 +21,10 @@ public class RoomSearching {
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header("Location", "/kombat/createPlayer")
                 .build();
+    }
+
+    @GetMapping("/player-count")
+    public ResponseEntity<Integer> playerCount() {
+        return ResponseEntity.ok(CreatePlayer.playerList.size());
     }
 }

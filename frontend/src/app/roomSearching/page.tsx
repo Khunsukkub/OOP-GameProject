@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
+import {createPlayer} from "@/services/playerService";
+import StartGamePage from "@/app/start-game/page";
 
 export default function RoomSearchingPage() {
     const router = useRouter();
@@ -15,14 +17,13 @@ export default function RoomSearchingPage() {
 
     const checkPlayerCount = async () => {
         try {
-            const res = await axios.get("http://localhost:8001/game/api/player-count");
+            const res = await axios.get("http://localhost:8080/kombat/player-count");
             const count = res.data;
 
             console.log("🔁 Checking player count:", count);
             if (count >= 2) {
                 // ไปหน้า minion พร้อมส่ง player1 = คนแรก, player2 = คนล่าสุด
-                const gameState = await axios.get("http://localhost:8001/game/api/players");
-                const players = gameState.data;
+                const players = ;
 
                 const player1 = players[0]?.name || "Player 1";
                 const player2 = players[1]?.name || "Player 2";

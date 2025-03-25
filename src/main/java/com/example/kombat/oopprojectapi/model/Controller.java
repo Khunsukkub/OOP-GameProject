@@ -147,7 +147,8 @@ public class Controller {
     public static PurchaseResponse buyMinion(Player player, Minion minion) {
         if(player.budget >= minion.spawn_cost) {
             player.budget -= minion.spawn_cost;
-            player.addMinion(minion);
+            Minion playerMinion = minion.clone();
+            player.addMinion(playerMinion);
             return new PurchaseResponse("ซื้อสำเร็จ" , player.ownMinion);
         } else {
             return new PurchaseResponse("คุณมีเงินไม่มากพอ", null);

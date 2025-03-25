@@ -26,6 +26,7 @@ public class Player {
     }
 
     public void addMinion (Minion minion) {
+        minion.setMinionOwner(this);
         ownMinion[MinionNumber] = minion;
         MinionNumber++;
     }

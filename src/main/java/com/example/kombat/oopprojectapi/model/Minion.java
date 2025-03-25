@@ -30,4 +30,8 @@ public class Minion {
         return hp;
     }
 
+    public Minion clone() {
+        return new Minion(name, init_hp, defense_factor, spawn_cost, strategy);
+    }
+
 }

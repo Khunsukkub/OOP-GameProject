@@ -94,8 +94,6 @@ public class Board {
     }
 
     //ฟังก์ชันที่ใช้ในการ ซื้อ Minion
-
-    //ลืมคิดว่า มินเนี่ยน จะต้องถูก new ใหม่ทุกครั้ง เพราะว่า minion แต่ละตัวไม่ใช่ instance เดียวกัน แต่เป็นการสร้างใหม่เรื่อยๆ มาวาง
     @PostMapping("/{playerId}/buyMinion/{minionName}")
     public ResponseEntity<PurchaseResponse> buyMinion(@PathVariable String minionName , @PathVariable int playerId) {
         Minion minion = getMinionByName(minionName);
@@ -110,6 +108,7 @@ public class Board {
         }
     }
 
+    //Func ในการวางมินเนี่ยนหลังจากซื้อเสร็จทันที
     @PostMapping("/{playerId}/Deploy/{minionName}/{row}/{col}")
     public ResponseEntity<String> deployMinion(@PathVariable String minionName, @PathVariable int row, @PathVariable int col, @PathVariable int playerId) {
         Minion minion = getMinionByName(minionName);

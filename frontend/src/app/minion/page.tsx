@@ -171,4 +171,13 @@ const MinionPage: React.FC = () => {
     );
 };
 
-export default MinionPage;
+// ห่อ MinionPage ด้วย PlayerProvider
+const MinionPageWithProvider: React.FC = () => {
+    return (
+        <PlayerProvider>
+            <MinionPage />
+        </PlayerProvider>
+    );
+};
+
+export default MinionPageWithProvider;

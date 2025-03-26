@@ -2,6 +2,8 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import {usePlayer} from "@/app/context/PlayerContext";
+import {PlayerProvider} from "@/app/context/PlayerContext";
 
 // ถ้าต้องการใช้ CSS เหล่านี้จริง ให้คงไว้
 // หากไม่จำเป็น ให้ลบออกเพื่อลดการ import ไม่จำเป็น
@@ -12,6 +14,7 @@ import "@/app/start-game/start-game.css";
 
 const StartPage: React.FC = () => {
     const router = useRouter();
+    const { resetPlayers } = usePlayer();
 
     const handleStartGame = () => {
         // นำทางไปยังหน้า /mode
@@ -38,4 +41,13 @@ const StartPage: React.FC = () => {
     );
 };
 
-export default StartPage;
+// ห่อ RoomSearchingPage ด้วย PlayerProvider
+const StartPagePageWithProvider: React.FC = () => {
+    return (
+        <PlayerProvider>
+            <StartPage />
+        </PlayerProvider>
+    );
+};
+
+export default StartPagePageWithProvider;

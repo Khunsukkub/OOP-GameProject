@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode , useEffect } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 // กำหนด type ให้กับ Player
 export interface Player {
@@ -13,8 +13,9 @@ export interface Player {
 
 // สร้าง Context ที่เก็บ array ของ players พร้อมกับฟังก์ชันในการเพิ่ม player
 interface PlayerContextType {
-    players: Player[]; // เก็บ array ของ players
-    addPlayer: (player: Player) => void; // ฟังก์ชันในการเพิ่ม player
+    players: Player[];
+    addPlayer: (player: Player) => void;
+    resetPlayers: () => void; // ฟังก์ชันในการรีเซ็ต player
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -33,12 +34,14 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         return savedPlayers ? JSON.parse(savedPlayers) : [];
     });
 
+    const [isReset, setIsReset] = useState(false);
+
+    // ลบข้อมูลทั้งหมดใน localStorage เมื่อรีเซ็ต players
     useEffect(() => {
-        // ลบข้อมูลจาก localStorage เมื่อคอมโพเนนต์ถูก unmount
-        return () => {
-            localStorage.clear();
-        };
-    }, []);
+        if (isReset) {
+            const [players, setPlayers] = useState<Player[]>([]); // ใช้ useState เก็บ players
+        }
+    }, [isReset]);
 
     useEffect(() => {
         // ทุกครั้งที่ players เปลี่ยนแปลง ให้เก็บค่าลงใน localStorage
@@ -49,8 +52,13 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         setPlayers((prevPlayers) => [...prevPlayers, player]);
     };
 
+    const resetPlayers = () => {
+        setPlayers([]); // รีเซ็ต players
+        setIsReset(true); // ตั้งค่าสถานะการเริ่มใหม่
+    };
+
     return (
-        <PlayerContext.Provider value={{ players, addPlayer }}>
+        <PlayerContext.Provider value={{ players, addPlayer, resetPlayers }}>
             {children}
         </PlayerContext.Provider>
     );

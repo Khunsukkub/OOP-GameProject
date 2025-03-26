@@ -18,12 +18,14 @@ function RoomSearchingPage() {
     const mode = searchParams.get("mode") || "PVP";
     const [joined, setJoined] = useState(false);
 
+    const currentPlayer = players[0]?.name === playerName ? 1 : 2;
+
     // ฟังข้อความจากแท็บอื่นๆ
     useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
             if (event.data.action === "START_GAME") {
                 const { player1, player2, mode } = event.data;
-                router.push(`/minion?player=2&player1=${player1}&player2=${player2}&mode=${mode}`);
+                router.push(`/minion?player=${currentPlayer}&player1=${player1}&player2=${player2}&mode=${mode}`);
             }
         };
 
@@ -35,13 +37,13 @@ function RoomSearchingPage() {
         try {
             const res = await axios.get("http://localhost:8080/kombat/player-count");
             const count = res.data;
-
             console.log("🔁 Checking player count:", count);
 
             // ตรวจสอบว่า players มีข้อมูลครบ 2 คน
             if (count >= 2) {
                 const player1 = players[0]?.name;
                 const player2 = players[1]?.name;
+                console.log(players)
 
                 if (player1 && player2) {
                     console.log(`${player1} ${player2} have been joined`);
@@ -54,8 +56,8 @@ function RoomSearchingPage() {
                         mode,
                     });
 
-                    // เปลี่ยนหน้าไปที่หน้าของ minion
-                    router.push(`/minion?player=2&player1=${player1}&player2=${player2}&mode=${mode}`);
+                    // ปรับ URL ให้ตรงกับ player ที่เป็นเจ้าของแท็บ
+                    router.push(`/minion?player=${currentPlayer}&player1=${player1}&player2=${player2}&mode=${mode}`);
                 }
             }
         } catch (err) {
